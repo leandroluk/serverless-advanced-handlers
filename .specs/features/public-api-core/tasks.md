@@ -100,11 +100,12 @@
   - literais de `HttpStatus` corretos.
 - **Gate**: `pnpm vitest run --typecheck test/types/http-types.test-d.ts`
 - **Subtasks**:
-  - [ ] PO — critérios de aceite
-  - [ ] DEV — implementação + gate
-  - [ ] QA — verificação independente
-  - [ ] PO — aceite
-  - [ ] Commit
+  - [x] PO — critérios de aceite (11 ACs)
+  - [x] DEV — implementação + gate (8/8)
+  - [x] QA — verificação independente (PASS, sem defeitos)
+  - [x] PO — aceite (ACCEPTED)
+  - [x] Commit
+- **SPEC_DEVIATION (aceita):** "enum completo" foi implementado como **paridade com o `HttpStatus` do NestJS** (56 membros, mesmos nomes) **+ `NETWORK_AUTHENTICATION_REQUIRED = 511`**. Códigos IANA ausentes no NestJS (425, 426, 431, 451, 506, 510) ficaram de fora para não inventar nomes.
 
 ## T-005: Contrato de tipo de `AdvancedClass`
 - **REQ**: REQ-020..026 (tipos)

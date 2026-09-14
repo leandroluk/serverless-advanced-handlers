@@ -18,7 +18,7 @@ Fluxo de execução por task definido com as personas **PO / DEV / QA** em agent
 - [ ] public-api-core T-001: Entradas do pacote e fronteiras de dependência — Execute phase [P1]
 - [ ] public-api-core T-002: Primitivas de decorators duais — Execute phase [P1]
 - [x] public-api-core T-003: Tipos de DI (tokens e providers) — Execute phase [P1]
-- [ ] public-api-core T-004: Tipos de dados HTTP — Execute phase [P1]
+- [x] public-api-core T-004: Tipos de dados HTTP — Execute phase [P1]
 - [ ] public-api-core T-005: Contrato de tipo de `AdvancedClass` — Execute phase [P1]
 - [ ] public-api-core T-006: Decorators e marcadores de DI — Execute phase [P2]
 - [ ] public-api-core T-007: Decorators e marcadores HTTP — Execute phase [P2]
@@ -58,6 +58,7 @@ Fluxo de execução por task definido com as personas **PO / DEV / QA** em agent
 - [2026-09-14] v1 somente HTTP; multi-protocolo é visão futura com notas de viabilidade.
 
 ## Recent Progress (Last 10)
+- [2026-09-14] public-api-core T-004 complete. Gate: 8/8 pass + `pnpm check`. QA PASS (11/11 AC; augmentation validada também pelo pacote gerado), PO ACCEPTED. SPEC_DEVIATION: `HttpStatus` = paridade NestJS (56 membros) + 511, sem códigos IANA ausentes no NestJS. Commit: `feat(http)` (este commit). [REQ-042, REQ-045, REQ-053]
 - [2026-09-14] public-api-core T-003 complete. Gate: 22/22 pass + `pnpm check`. QA PASS (14/14 AC, sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(di)` (este commit). [REQ-031..035]
 - [2026-09-14] F00 `project-setup` complete. Gate: 5/5 pass (install, check, lint:ci, test, build) + commit-msg hook validado. QA PASS (16/16 AC), PO ACCEPTED. SPEC_DEVIATION: 3 aceitas (normalização oxfmt; `pnpm-workspace.yaml` e `.prettierignore` extras; aceite do commit-msg via hook direto) — detalhes em project-setup/spec.md. Commit: `chore: setup project` (commit inicial).
 - [2026-09-14] Fluxo PO/DEV/QA configurado: agentes `po`, `dev` e `qa` criados em `.claude/agents/`, CONVENTIONS.md atualizado e subtasks por persona adicionadas às tasks de F00, F01a e F01b.
@@ -66,9 +67,7 @@ Fluxo de execução por task definido com as personas **PO / DEV / QA** em agent
 - [2026-09-14] F01 `public-api`: modos de decorators (REQ-004..008) e alvo osls (REQ-003, 090, 094) incorporados; INSIGHT §6.6 criado; protótipo validou decorators duais, TS1206 no TC39, marcadores de tipo e ausência de metadata no esbuild.
 - [2026-09-14] F01 `public-api`: spec aprovada; REQ-101/104 ajustadas (overrides em objeto) e tipagem mutuamente excludente validada em protótipo.
 - [2026-09-14] F01 `public-api`: discuss mode concluído (Q1–Q4 em context.md); `v.instance` e tipagem de `encode` validados em protótipo.
-- [2026-09-14] F01 `public-api`: spec.md criado (Specify).
-- [2026-09-14] Projeto inicializado: `.specs/` (PROJECT, ROADMAP, STATE, codebase/STACK, ARCHITECTURE, CONCERNS, CONVENTIONS, TESTING).
-## Lessons Learned (Last 5)
+- [2026-09-14] F01 `public-api`: spec.md criado (Specify).## Lessons Learned (Last 5)
 - [2026-09-14] Agentes definidos em `.claude/agents/` durante a sessão só ficam disponíveis após reiniciar; até lá, use `general-purpose` com `model` e as instruções do arquivo (o esforço não pode ser fixado). QA de tipos precisa de temporários dentro do escopo do tsconfig (`test/__qa__/`). pnpm 12 exige `allowBuilds` para o lefthook.
 - [2026-09-14] esbuild ignora `emitDecoratorMetadata` (não emite `design:paramtypes`); bibliotecas dependentes de metadata exigem transform com SWC ou tsc antes do bundle.
 - [2026-09-14] Uma função de decorator com assinatura dupla (`(target, key, descriptor)` & `(value, context)`) passa no type-check e roda nos modos legado e TC39; TC39 não aceita decorators de parâmetro (TS1206).
