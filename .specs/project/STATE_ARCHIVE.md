@@ -47,3 +47,10 @@
 - [2026-09-14] esbuild não remove métodos de classe não usados — só o fatiamento no AST garante bundles mínimos.
 
 ---
+
+## Archive — 2026-09-14 (compaction 7)
+
+### Progress
+- [2026-09-14] INSIGHT.md revisado em duas iterações; protótipos validaram `v`, `Class()`, `.meta()` tipado, multipart nativo, `S3UploadedFile` e fatiamento com ts-morph.
+
+---

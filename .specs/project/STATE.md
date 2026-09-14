@@ -17,7 +17,7 @@ Fluxo de execução por task definido com as personas **PO / DEV / QA** em agent
 - [x] F00 `project-setup` — Execute phase
 - [ ] public-api-core T-001: Entradas do pacote e fronteiras de dependência — Execute phase [P1]
 - [ ] public-api-core T-002: Primitivas de decorators duais — Execute phase [P1]
-- [ ] public-api-core T-003: Tipos de DI (tokens e providers) — Execute phase [P1]
+- [x] public-api-core T-003: Tipos de DI (tokens e providers) — Execute phase [P1]
 - [ ] public-api-core T-004: Tipos de dados HTTP — Execute phase [P1]
 - [ ] public-api-core T-005: Contrato de tipo de `AdvancedClass` — Execute phase [P1]
 - [ ] public-api-core T-006: Decorators e marcadores de DI — Execute phase [P2]
@@ -58,6 +58,7 @@ Fluxo de execução por task definido com as personas **PO / DEV / QA** em agent
 - [2026-09-14] v1 somente HTTP; multi-protocolo é visão futura com notas de viabilidade.
 
 ## Recent Progress (Last 10)
+- [2026-09-14] public-api-core T-003 complete. Gate: 22/22 pass + `pnpm check`. QA PASS (14/14 AC, sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(di)` (este commit). [REQ-031..035]
 - [2026-09-14] F00 `project-setup` complete. Gate: 5/5 pass (install, check, lint:ci, test, build) + commit-msg hook validado. QA PASS (16/16 AC), PO ACCEPTED. SPEC_DEVIATION: 3 aceitas (normalização oxfmt; `pnpm-workspace.yaml` e `.prettierignore` extras; aceite do commit-msg via hook direto) — detalhes em project-setup/spec.md. Commit: `chore: setup project` (commit inicial).
 - [2026-09-14] Fluxo PO/DEV/QA configurado: agentes `po`, `dev` e `qa` criados em `.claude/agents/`, CONVENTIONS.md atualizado e subtasks por persona adicionadas às tasks de F00, F01a e F01b.
 - [2026-09-14] Tasks criadas: F01a `public-api-core` (8) e F01b `public-api-surface` (5); F00 `project-setup` especificada (Medium). pnpm 12.4.1 detectado e fixado na spec.
@@ -67,8 +68,6 @@ Fluxo de execução por task definido com as personas **PO / DEV / QA** em agent
 - [2026-09-14] F01 `public-api`: discuss mode concluído (Q1–Q4 em context.md); `v.instance` e tipagem de `encode` validados em protótipo.
 - [2026-09-14] F01 `public-api`: spec.md criado (Specify).
 - [2026-09-14] Projeto inicializado: `.specs/` (PROJECT, ROADMAP, STATE, codebase/STACK, ARCHITECTURE, CONCERNS, CONVENTIONS, TESTING).
-- [2026-09-14] INSIGHT.md revisado em duas iterações; protótipos validaram `v`, `Class()`, `.meta()` tipado, multipart nativo, `S3UploadedFile` e fatiamento com ts-morph.
-
 ## Lessons Learned (Last 5)
 - [2026-09-14] Agentes definidos em `.claude/agents/` durante a sessão só ficam disponíveis após reiniciar; até lá, use `general-purpose` com `model` e as instruções do arquivo (o esforço não pode ser fixado). QA de tipos precisa de temporários dentro do escopo do tsconfig (`test/__qa__/`). pnpm 12 exige `allowBuilds` para o lefthook.
 - [2026-09-14] esbuild ignora `emitDecoratorMetadata` (não emite `design:paramtypes`); bibliotecas dependentes de metadata exigem transform com SWC ou tsc antes do bundle.

@@ -78,11 +78,11 @@
   - erro com `inject` fora de `useFactory`.
 - **Gate**: `pnpm vitest run --typecheck test/types/di.test-d.ts`
 - **Subtasks**:
-  - [ ] PO — critérios de aceite
-  - [ ] DEV — implementação + gate
-  - [ ] QA — verificação independente
-  - [ ] PO — aceite
-  - [ ] Commit
+  - [x] PO — critérios de aceite (14 ACs)
+  - [x] DEV — implementação + gate (22/22)
+  - [x] QA — verificação independente (PASS, sem defeitos)
+  - [x] PO — aceite (ACCEPTED)
+  - [x] Commit
 
 ## T-004: Tipos de dados HTTP
 - **REQ**: REQ-042 (`HttpStatus`), REQ-045 (tipos), REQ-053
