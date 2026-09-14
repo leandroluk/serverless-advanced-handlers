@@ -16,5 +16,6 @@ Semeado a partir da tabela de riscos da [INSIGHT.md §10](../../INSIGHT.md).
 | Matriz de modos A/B/C        | Triplica os cenários de teste do compilador                                             | Fixtures parametrizadas por tsconfig                  |
 | Plugin do Vitest (testing)   | Reescrita de `Test.createTestingModule` falha com metadados dinâmicos                    | Exigir metadados analisáveis (SAH100); testes dedicados |
 | Superfície pública           | ~150 exports na raiz; quebras acidentais de tipos                                       | Testes de tipo por área + snapshot do `.d.ts` público |
+| `tsconfig.json` sem `noEmit`   | `tsc` executado sem `--noEmit` (ou tsconfig que estende o raiz) emite `.js`/`.d.ts` dentro de `src/` | Scripts usam `tsc --noEmit`; avaliar `noEmit: true` sem quebrar a geração de tipos do tsdown |
 | INIT da Lambda               | Limite de 10s para `onModuleInit`/factories async                                       | Documentação                                          |
 | Fluxo S3 de uploads          | Complexidade alta e mudança de contrato para o cliente                                  | Última fase; OpenAPI + helper de cliente              |

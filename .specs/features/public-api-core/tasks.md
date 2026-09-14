@@ -54,11 +54,13 @@
   - As factories não alteram o alvo em runtime.
 - **Gate**: `pnpm vitest run --typecheck test/types/dual-decorators.test-d.ts test/decorator-modes.spec.ts`
 - **Subtasks**:
-  - [ ] PO — critérios de aceite
-  - [ ] DEV — implementação + gate
-  - [ ] QA — verificação independente
-  - [ ] PO — aceite
-  - [ ] Commit
+  - [x] PO — critérios de aceite (9 ACs; decisões: interseção para classe-ou-método, `parameterDecorator` só legado, modo A fora)
+  - [x] DEV — implementação + gate (10/10; retomada após limite de sessão)
+  - [x] QA — verificação independente (PASS, sem defeitos)
+  - [x] PO — aceite (ACCEPTED)
+  - [x] Commit
+- **SPEC_DEVIATION (aceita):** a forma TC39 de `DualMethodDecorator` é genérica em `This` (`<This>(value: DecoratableMethod<This>, context: ClassMethodDecoratorContext<This>) => void`). Sem isso, métodos com `this` explícito geram TS1241 no modo C, o que fere a REQ-005 (design, decisão 16).
+- **Observação:** decorators de método não se aplicam a getters/setters (TS1241); `DualAccessorDecorator` fica como ideia adiada.
 
 ## T-003: Tipos de DI (tokens e providers)
 - **REQ**: REQ-031, REQ-032, REQ-033, REQ-034, REQ-035 (tipos)

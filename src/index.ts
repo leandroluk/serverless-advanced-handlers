@@ -5,6 +5,7 @@ export type {
   ClassFactory,
   InstanceSchemaFactory,
 } from '#/class/types';
+export * from '#/decorators/dual';
 export * from '#/di/providers';
 export * from '#/di/tokens';
 export {HttpStatus} from '#/http';

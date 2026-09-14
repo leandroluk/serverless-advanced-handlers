@@ -455,3 +455,4 @@ Nenhum (greenfield).
 13. **Erros de build com códigos `SAH` por faixa,** estáveis e documentados.
 14. **Tipos AWS via `@types/aws-lambda`** (dependência apenas de tipos).
 15. **`AnyAdvancedClass` como restrição para "qualquer classe `Class()`"** (descoberto na public-api-core T-005). `AdvancedClass` sem argumento rejeita classes concretas, porque o parâmetro do construtor é contravariante. Por isso decorators de transporte, `instance()` e `ResponseSchema` usam `AnyAdvancedClass`.
+16. **Forma TC39 de `DualMethodDecorator` genérica em `This`** (descoberto na public-api-core T-002). Métodos com `this` explícito geram TS1241 no modo C se `ClassMethodDecoratorContext` não for parametrizado, o que quebraria a REQ-005 (mesmas funções nos três modos).
