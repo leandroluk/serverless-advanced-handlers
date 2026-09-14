@@ -1,0 +1,51 @@
+{
+  "plugins": ["typescript", "vitest"],
+  "jsPlugins": ["eslint-plugin-sonarjs"],
+  "ignorePatterns": [
+    "**/dist/**",
+    "**/node_modules/**",
+    "**/.coverage/**",
+    ".serverless-advanced/**",
+    ".qa/**",
+    "*.config.*"
+  ],
+  "rules": {
+    "typescript/no-explicit-any": "error",
+    "typescript/no-namespace": "error",
+    "typescript/consistent-type-imports": "off",
+    "typescript/explicit-function-return-type": "error",
+    "typescript/no-floating-promises": "error",
+    "typescript/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "prefer-const": "error",
+    "no-var": "error",
+    "eqeqeq": "error",
+    "no-unneeded-ternary": "error",
+    "curly": ["error", "all"],
+    "sonarjs/todo-tag": "warn",
+    "sonarjs/fixme-tag": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.*", "**/*.spec.*"],
+      "rules": {
+        "typescript/no-explicit-any": "off",
+        "typescript/no-floating-promises": "off",
+        "typescript/explicit-function-return-type": "off",
+        "vitest/require-mock-type-parameters": "off"
+      }
+    },
+    {
+      "files": ["**/*.d.ts"],
+      "rules": {
+        "typescript/no-namespace": "off"
+      }
+    }
+  ]
+}

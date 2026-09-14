@@ -1,0 +1,4 @@
+# Project documentation and agent definitions (not formatted by oxfmt)
+.specs/
+.claude/
+INSIGHT.md

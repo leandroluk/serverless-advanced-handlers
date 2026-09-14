@@ -1,0 +1,33 @@
+# Configurations for automation of Git Hooks
+# Documentation: https://lefthook.dev/configuration
+
+# Hook executed before commit message
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm commitlint --edit {1}
+
+# Hook executed before commit
+pre-commit:
+  commands:
+    # format workspace before commit (re-stages fixed files)
+    format:
+      run: pnpm oxfmt --write .
+      stage_fixed: true
+
+    # oxlint + tsc --noEmit
+    check:
+      run: pnpm check
+
+    # oxlint --fix (re-stages fixed files)
+    lint:
+      run: pnpm lint
+      stage_fixed: true
+
+# Hook executed before push
+pre-push:
+  commands:
+    build:
+      run: pnpm build
+    test:
+      run: pnpm test

@@ -1,0 +1,19 @@
+# Dependencies
+node_modules
+
+# Build outputs
+dist
+*.tsbuildinfo
+
+# Framework build output
+.serverless-advanced
+
+# Testing
+.coverage
+
+# graph-spec-design cache
+.specs/graph/cache/
+
+# QA agent temporaries
+.qa/
+test/__qa__/

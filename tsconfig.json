@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "rootDir": ".",
+    "target": "ES2023",
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "useUnknownInCatchVariables": false,
+    "strict": true,
+    "skipLibCheck": true,
+    "noUncheckedIndexedAccess": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "removeComments": false,
+    "ignoreDeprecations": "6.0",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "incremental": false,
+    "paths": {"#/*": ["./src/*"]},
+    "types": ["node"]
+  },
+  "include": ["src", "test", "*.config.*"],
+  "exclude": ["node_modules", "dist"]
+}

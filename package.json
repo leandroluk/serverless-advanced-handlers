@@ -1,0 +1,63 @@
+{
+  "name": "serverless-advanced-handlers",
+  "version": "0.0.0",
+  "type": "module",
+  "imports": {
+    "#/*": "./src/*"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    },
+    "./runtime": {
+      "types": "./dist/runtime.d.mts",
+      "import": "./dist/runtime.mjs",
+      "default": "./dist/runtime.mjs"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.mts",
+      "import": "./dist/testing.mjs",
+      "default": "./dist/testing.mjs"
+    },
+    "./plugin": {
+      "types": "./dist/plugin.d.cts",
+      "require": "./dist/plugin.cjs",
+      "default": "./dist/plugin.cjs"
+    }
+  },
+  "scripts": {
+    "prepare": "lefthook install",
+    "build": "tsdown",
+    "format": "oxfmt --write .",
+    "lint": "oxlint src test --fix",
+    "lint:ci": "oxfmt --check . && oxlint src test",
+    "check": "oxlint src test && tsc --noEmit",
+    "test": "vitest run",
+    "test:ci": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "21.2.2",
+    "@commitlint/config-conventional": "21.2.2",
+    "@commitlint/types": "21.2.0",
+    "@types/aws-lambda": "8.10.163",
+    "@types/node": "26.0.0",
+    "@vitest/coverage-v8": "5.0.0",
+    "eslint-plugin-sonarjs": "4.2.0",
+    "lefthook": "2.1.10",
+    "oxfmt": "0.67.0",
+    "oxlint": "1.79.0",
+    "tsdown": "0.23.0",
+    "typescript": "6.0.3",
+    "vitest": "5.0.0",
+    "zod": "4.4.3"
+  },
+  "peerDependencies": {
+    "zod": "^4"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@12.4.1"
+}
