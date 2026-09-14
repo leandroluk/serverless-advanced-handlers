@@ -55,3 +55,13 @@
 - [2026-09-14] Projeto inicializado: `.specs/` (PROJECT, ROADMAP, STATE, codebase/STACK, ARCHITECTURE, CONCERNS, CONVENTIONS, TESTING).
 
 ---
+
+## Archive — 2026-09-14 (compaction 8)
+
+### Progress
+- [2026-09-14] F01 `public-api`: spec.md criado (Specify).
+
+### Decisions
+- [2026-09-14] v1 somente HTTP; multi-protocolo é visão futura com notas de viabilidade.
+
+---

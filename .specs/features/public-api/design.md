@@ -116,8 +116,14 @@ export interface AdvancedClass<S extends z.ZodObject = z.ZodObject> {
   safeParse<T extends AbstractType>(this: T, input: unknown): z.ZodSafeParseResult<InstanceType<T>>;
   encode(value: z.output<S> | z.input<S>): z.input<S>;
 }
+/**
+ * Supertipo aceito por qualquer classe Class() (subclasses concretas, abstratas e de subclasses).
+ * `AdvancedClass` puro não serve como restrição: o parâmetro do construtor é contravariante (TS2322).
+ */
+export type AnyAdvancedClass = (abstract new (...args: never) => object) & Pick<AdvancedClass, keyof AdvancedClass>;
+
 export function Class<S extends z.ZodObject>(source: S | AdvancedClass<S>): AdvancedClass<S>;
-export function instance<T extends AdvancedClass>(cls: T): z.ZodCodec<T['object'], z.ZodType<InstanceType<T>>>;
+export function instance<T extends AnyAdvancedClass>(cls: T): z.ZodCodec<T['object'], z.ZodType<InstanceType<T>>>;
 export function isServerlessAdvancedHandlersClass(value: unknown): value is AdvancedClass;
 ```
 
@@ -177,7 +183,7 @@ export function HttpCode(status: HttpStatus | number): DualMethodDecorator;
 export function HttpResponseHeader(name: string, value: string): DualMethodDecorator;
 
 // parâmetros: decorator + marcador de tipo com o mesmo nome (REQ-043, REQ-007)
-export function HttpBody(cls?: AdvancedClass): ParameterDecorator;
+export function HttpBody(cls?: AnyAdvancedClass): ParameterDecorator;
 export type HttpBody<T> = T;
 // idem: HttpQuery, HttpParams, HttpHeaders, HttpCookies, HttpForm
 
@@ -267,7 +273,7 @@ type ReflectTarget = Type | ((...args: never[]) => unknown);
 
 ### OpenAPI (raiz) — F09
 ```ts
-type ResponseSchema = AdvancedClass | readonly [AdvancedClass]; // [Cls] = array
+type ResponseSchema = AnyAdvancedClass | readonly [AnyAdvancedClass]; // [Cls] = array
 export interface OpenapiResponseOptions { status: HttpStatus | number; description: string; schema?: ResponseSchema }
 
 export function OpenapiTags(...tags: string[]): DualClassDecorator & DualMethodDecorator;
@@ -448,3 +454,4 @@ Nenhum (greenfield).
 12. **O plugin do Vitest injeta containers gerados** nas chamadas `Test.createTestingModule`.
 13. **Erros de build com códigos `SAH` por faixa,** estáveis e documentados.
 14. **Tipos AWS via `@types/aws-lambda`** (dependência apenas de tipos).
+15. **`AnyAdvancedClass` como restrição para "qualquer classe `Class()`"** (descoberto na public-api-core T-005). `AdvancedClass` sem argumento rejeita classes concretas, porque o parâmetro do construtor é contravariante. Por isso decorators de transporte, `instance()` e `ResponseSchema` usam `AnyAdvancedClass`.

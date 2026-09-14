@@ -122,11 +122,13 @@
   - `instance()` tipando o campo como instância.
 - **Gate**: `pnpm vitest run --typecheck test/types/advanced-class.test-d.ts`
 - **Subtasks**:
-  - [ ] PO — critérios de aceite
-  - [ ] DEV — implementação + gate
-  - [ ] QA — verificação independente
-  - [ ] PO — aceite
-  - [ ] Commit
+  - [x] PO — critérios de aceite (10 ACs; decisão: somente tipos, sem exports de valor)
+  - [x] DEV — implementação + gate (10/10; retomada após limite de sessão)
+  - [x] QA — verificação independente (PASS; D-1 e D-2 menores)
+  - [x] DEV — correção D-2 (asserções diretas de rejeição em `AnyAdvancedClass`)
+  - [x] PO — aceite (ACCEPTED)
+  - [x] Commit
+- **SPEC_DEVIATION (aceita):** tipo público extra `AnyAdvancedClass`, usado como restrição em `InstanceSchemaFactory`. `AdvancedClass` puro rejeita classes concretas porque o parâmetro do construtor é contravariante. Ratificado no design (decisão 15), que também passou a usar `AnyAdvancedClass` em `HttpBody(cls?)` e `ResponseSchema`.
 
 ## T-006: Decorators e marcadores de DI
 - **REQ**: REQ-030, REQ-031, REQ-033, REQ-007 (`Inject`, `Optional`)

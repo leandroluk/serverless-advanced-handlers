@@ -1,3 +1,10 @@
+export type {
+  AdvancedClass,
+  AdvancedClassGuard,
+  AnyAdvancedClass,
+  ClassFactory,
+  InstanceSchemaFactory,
+} from '#/class/types';
 export * from '#/di/providers';
 export * from '#/di/tokens';
 export {HttpStatus} from '#/http';

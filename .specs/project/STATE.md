@@ -19,7 +19,7 @@ Fluxo de execução por task definido com as personas **PO / DEV / QA** em agent
 - [ ] public-api-core T-002: Primitivas de decorators duais — Execute phase [P1]
 - [x] public-api-core T-003: Tipos de DI (tokens e providers) — Execute phase [P1]
 - [x] public-api-core T-004: Tipos de dados HTTP — Execute phase [P1]
-- [ ] public-api-core T-005: Contrato de tipo de `AdvancedClass` — Execute phase [P1]
+- [x] public-api-core T-005: Contrato de tipo de `AdvancedClass` — Execute phase [P1]
 - [ ] public-api-core T-006: Decorators e marcadores de DI — Execute phase [P2]
 - [ ] public-api-core T-007: Decorators e marcadores HTTP — Execute phase [P2]
 - [ ] public-api-core T-008: `HttpResult` e exceções HTTP — Execute phase [P2]
@@ -36,6 +36,7 @@ Fluxo de execução por task definido com as personas **PO / DEV / QA** em agent
 - none
 
 ## Recent Decisions (Last 15)
+- [2026-09-14] `AnyAdvancedClass` é a restrição para "qualquer classe `Class()`" (decorators de transporte, `instance()`, `ResponseSchema`), porque `AdvancedClass` puro rejeita classes concretas por contravariância do construtor (design decisão 15).
 - [2026-09-14] Execução com personas PO/DEV/QA em agentes separados: `po` Haiku 4.5 (somente leitura), `dev` Opus 5 high, `qa` Sonnet 5 medium (verifica e reporta, sem editar; temporários em `.qa/`); até 3 ciclos DEV↔QA antes de escalar ao usuário; orquestrador faz os commits.
 - [2026-09-14] Commits autorizados pelo usuário: um commit por task (Conventional Commits) com código, testes e specs/STATE (Spec Gate).
 - [2026-09-14] Safety valve: superfície declarativa da API dividida em F01a `public-api-core` e F01b `public-api-surface`; comportamento segue nas features F03–F12.
@@ -55,9 +56,8 @@ Fluxo de execução por task definido com as personas **PO / DEV / QA** em agent
 - [2026-09-14] Q3: corpo de erro default compatível com NestJS; RFC 9457 via `errors.format: problem-json`.
 - [2026-09-14] Q2: rota com corpo sem schema `Class()` gera erro de build por padrão; `responses.missingSchema: warn` rebaixa para warning.
 - [2026-09-14] Q1: classes aninhadas tipadas como instância via `v.instance(Cls)`; `Cls.encode` tipado como `output | input` para aceitar linhas cruas.
-- [2026-09-14] v1 somente HTTP; multi-protocolo é visão futura com notas de viabilidade.
-
 ## Recent Progress (Last 10)
+- [2026-09-14] public-api-core T-005 complete. Gate: 10/10 pass + `pnpm check`. QA PASS (D-1 ratificado, D-2 corrigido pelo DEV), PO ACCEPTED. SPEC_DEVIATION: `AnyAdvancedClass` (design decisão 15). Commit: `feat(class)` (este commit). [REQ-020..026]
 - [2026-09-14] public-api-core T-004 complete. Gate: 8/8 pass + `pnpm check`. QA PASS (11/11 AC; augmentation validada também pelo pacote gerado), PO ACCEPTED. SPEC_DEVIATION: `HttpStatus` = paridade NestJS (56 membros) + 511, sem códigos IANA ausentes no NestJS. Commit: `feat(http)` (este commit). [REQ-042, REQ-045, REQ-053]
 - [2026-09-14] public-api-core T-003 complete. Gate: 22/22 pass + `pnpm check`. QA PASS (14/14 AC, sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(di)` (este commit). [REQ-031..035]
 - [2026-09-14] F00 `project-setup` complete. Gate: 5/5 pass (install, check, lint:ci, test, build) + commit-msg hook validado. QA PASS (16/16 AC), PO ACCEPTED. SPEC_DEVIATION: 3 aceitas (normalização oxfmt; `pnpm-workspace.yaml` e `.prettierignore` extras; aceite do commit-msg via hook direto) — detalhes em project-setup/spec.md. Commit: `chore: setup project` (commit inicial).
@@ -66,8 +66,7 @@ Fluxo de execução por task definido com as personas **PO / DEV / QA** em agent
 - [2026-09-14] F01 `public-api`: design.md criado; spec refinada (REQ-005, REQ-066, REQ-070) e Serverless v3 incluído (REQ-003, REQ-094); JSON Schema draft-07 do Zod validado para a config do plugin.
 - [2026-09-14] F01 `public-api`: modos de decorators (REQ-004..008) e alvo osls (REQ-003, 090, 094) incorporados; INSIGHT §6.6 criado; protótipo validou decorators duais, TS1206 no TC39, marcadores de tipo e ausência de metadata no esbuild.
 - [2026-09-14] F01 `public-api`: spec aprovada; REQ-101/104 ajustadas (overrides em objeto) e tipagem mutuamente excludente validada em protótipo.
-- [2026-09-14] F01 `public-api`: discuss mode concluído (Q1–Q4 em context.md); `v.instance` e tipagem de `encode` validados em protótipo.
-- [2026-09-14] F01 `public-api`: spec.md criado (Specify).## Lessons Learned (Last 5)
+- [2026-09-14] F01 `public-api`: discuss mode concluído (Q1–Q4 em context.md); `v.instance` e tipagem de `encode` validados em protótipo.## Lessons Learned (Last 5)
 - [2026-09-14] Agentes definidos em `.claude/agents/` durante a sessão só ficam disponíveis após reiniciar; até lá, use `general-purpose` com `model` e as instruções do arquivo (o esforço não pode ser fixado). QA de tipos precisa de temporários dentro do escopo do tsconfig (`test/__qa__/`). pnpm 12 exige `allowBuilds` para o lefthook.
 - [2026-09-14] esbuild ignora `emitDecoratorMetadata` (não emite `design:paramtypes`); bibliotecas dependentes de metadata exigem transform com SWC ou tsc antes do bundle.
 - [2026-09-14] Uma função de decorator com assinatura dupla (`(target, key, descriptor)` & `(value, context)`) passa no type-check e roda nos modos legado e TC39; TC39 não aceita decorators de parâmetro (TS1206).
