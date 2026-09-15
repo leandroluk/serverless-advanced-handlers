@@ -1,20 +1,16 @@
 # State
 
-Last synced commit: none (repositório git ainda não inicializado)
-**Last Updated:** 2026-09-14
+Last synced commit: 860a800
+**Last Updated:** 2026-09-15
 
 ## Current Work
-Fase **Tasks** concluída para a superfície declarativa da API:
-- F01a `public-api-core` (8 tasks);
-- F01b `public-api-surface` (5 tasks);
-- F00 `project-setup` (spec breve).
+**F00 `project-setup`, F01a `public-api-core` (8/8) e F01b `public-api-surface` (5/5) concluídas** — cada task integrada no master com commit próprio, fluxo PO/DEV/QA em agentes separados (`.claude/agents/`: `po` Haiku 4.5, `dev` Opus 5 high, `qa` Sonnet 5 medium), documentado em CONVENTIONS.md.
 
-Fluxo de execução por task definido com as personas **PO / DEV / QA** em agentes separados (`.claude/agents/`: `po` Haiku 4.5, `dev` Opus 5 high, `qa` Sonnet 5 medium), documentado em CONVENTIONS.md, com subtasks por persona em cada task.
+Além das 21 tasks, dois itens fora do fluxo de feature: quick task do usuário (35 exceções 4xx/5xx) e quick fix (`InjectionToken<T>` nominal), ambos com QA/PO/commit próprios.
 
-**F00 concluída.** **F01a `public-api-core` concluída (8/8)**, cada task integrada no master com commit próprio. **F01b `public-api-surface` concluída (5/5)**, cada task integrada no master com commit próprio.
-- T-001..T-005 concluídas. **F01b `public-api-surface` concluída (5/5).**
+Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43 comunidades) e docs de codebase `STRUCTURE.md`/`INTEGRATIONS.md` criados.
 
-Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica os patches e consolida os barrels. Agentes `po`/`dev`/`qa` registrados desde o reinício da sessão.
+Próximo passo em aberto: especificar F02 `poc-risks` (ver ROADMAP.md) — ainda não iniciado, aguardando sinal do usuário sobre prioridade/escopo.
 
 ## Todos
 - [x] F00 `project-setup` — Execute phase
