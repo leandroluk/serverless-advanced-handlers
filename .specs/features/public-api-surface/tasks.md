@@ -29,11 +29,11 @@
   - `switchToRpc()` é tipado como `never`.
 - **Gate**: `pnpm vitest run --typecheck test/types/pipeline.test-d.ts`
 - **Subtasks**:
-  - [ ] PO — critérios de aceite
-  - [ ] DEV — implementação + gate
-  - [ ] QA — verificação independente
-  - [ ] PO — aceite
-  - [ ] Commit
+  - [x] PO — critérios de aceite (10 ACs; somente contratos de tipo + tokens)
+  - [x] DEV — implementação + gate (17/17; retomada após limite de sessão)
+  - [x] QA — verificação independente (PASS, sem defeitos)
+  - [x] PO — aceite (ACCEPTED)
+  - [x] Commit
 
 ## T-002: Decorators OpenAPI
 - **REQ**: REQ-070

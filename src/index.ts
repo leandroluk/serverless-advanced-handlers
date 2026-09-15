@@ -22,3 +22,13 @@ export {
   UnprocessableEntityException,
 } from '#/http';
 export type {HttpMethod, HttpRequest, HttpResponseState, LambdaContext, UploadedFile} from '#/http';
+export {APP_FILTER, APP_GUARD, APP_INTERCEPTOR} from '#/pipeline';
+export type {
+  ArgumentsHost,
+  CallHandler,
+  CanActivate,
+  ExceptionFilter,
+  ExecutionContext,
+  HttpArgumentsHost,
+  Interceptor,
+} from '#/pipeline';
