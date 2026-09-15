@@ -86,5 +86,6 @@
 - [2026-09-14] public-api-core T-005 complete. Gate: 10/10 pass + `pnpm check`. QA PASS (D-1 ratificado, D-2 corrigido pelo DEV), PO ACCEPTED. SPEC_DEVIATION: `AnyAdvancedClass` (design decisão 15). Commit: `feat(class)`. [REQ-020..026]
 - [2026-09-14] public-api-core T-002 complete. Gate: 10/10 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: forma TC39 de `DualMethodDecorator` genérica em `This` (design decisão 16). Commit: `feat(decorators)`. [REQ-004, REQ-005, REQ-007]
 - [2026-09-14] public-api-core T-008 complete. Gate: 69/69 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(http)` exceptions. [REQ-049, REQ-051]
+- [2026-09-15] public-api-core T-001 complete. Gate: 7/7 pass + `pnpm check`/`lint:ci`/`test`. QA PASS (D-1 corrigido), PO ACCEPTED. SPEC_DEVIATION: `deps.neverBundle` no `tsdown.config.ts` (evita falso negativo do teste de fronteira). Commit: `test(boundaries)`. [REQ-001, REQ-002]
 
 ---
