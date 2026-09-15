@@ -20,7 +20,7 @@ Fluxo de execução por task definido com as personas **PO / DEV / QA** em agent
 - [x] public-api-core T-003: Tipos de DI (tokens e providers) — Execute phase [P1]
 - [x] public-api-core T-004: Tipos de dados HTTP — Execute phase [P1]
 - [x] public-api-core T-005: Contrato de tipo de `AdvancedClass` — Execute phase [P1]
-- [ ] public-api-core T-006: Decorators e marcadores de DI — Execute phase [P2]
+- [x] public-api-core T-006: Decorators e marcadores de DI — Execute phase [P2]
 - [ ] public-api-core T-007: Decorators e marcadores HTTP — Execute phase [P2]
 - [x] public-api-core T-008: `HttpResult` e exceções HTTP — Execute phase [P2]
 - [x] public-api-surface T-001: Contratos de pipeline e tokens globais — Execute phase [P1]
@@ -58,6 +58,7 @@ Fluxo de execução por task definido com as personas **PO / DEV / QA** em agent
 - [2026-09-14] Q2: rota com corpo sem schema `Class()` gera erro de build por padrão; `responses.missingSchema: warn` rebaixa para warning.
 - [2026-09-14] Q1: classes aninhadas tipadas como instância via `v.instance(Cls)`; `Cls.encode` tipado como `output | input` para aceitar linhas cruas.
 ## Recent Progress (Last 10)
+- [2026-09-15] public-api-core T-006 complete. Gate: 23/23 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(decorators)` DI (este commit). [REQ-004, REQ-005, REQ-007, REQ-030, REQ-031, REQ-033]
 - [2026-09-15] public-api-surface T-001 complete. Gate: 17/17 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(pipeline)` (este commit). [REQ-060, REQ-062, REQ-065]
 - [2026-09-15] public-api-core T-001 complete. Gate: 7/7 pass + `pnpm check`/`lint:ci`/`test`. QA PASS (D-1 corrigido), PO ACCEPTED. SPEC_DEVIATION: `deps.neverBundle` no `tsdown.config.ts` (evita falso negativo do teste de fronteira). Commit: `test(boundaries)` (este commit). [REQ-001, REQ-002]
 - [2026-09-14] public-api-core T-008 complete. Gate: 69/69 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(http)` exceptions (este commit). [REQ-049, REQ-051]
@@ -66,8 +67,7 @@ Fluxo de execução por task definido com as personas **PO / DEV / QA** em agent
 - [2026-09-14] public-api-core T-004 complete. Gate: 8/8 pass + `pnpm check`. QA PASS (11/11 AC; augmentation validada também pelo pacote gerado), PO ACCEPTED. SPEC_DEVIATION: `HttpStatus` = paridade NestJS (56 membros) + 511, sem códigos IANA ausentes no NestJS. Commit: `feat(http)` (este commit). [REQ-042, REQ-045, REQ-053]
 - [2026-09-14] public-api-core T-003 complete. Gate: 22/22 pass + `pnpm check`. QA PASS (14/14 AC, sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(di)` (este commit). [REQ-031..035]
 - [2026-09-14] F00 `project-setup` complete. Gate: 5/5 pass (install, check, lint:ci, test, build) + commit-msg hook validado. QA PASS (16/16 AC), PO ACCEPTED. SPEC_DEVIATION: 3 aceitas (normalização oxfmt; `pnpm-workspace.yaml` e `.prettierignore` extras; aceite do commit-msg via hook direto) — detalhes em project-setup/spec.md. Commit: `chore: setup project` (commit inicial).
-- [2026-09-14] Fluxo PO/DEV/QA configurado: agentes `po`, `dev` e `qa` criados em `.claude/agents/`, CONVENTIONS.md atualizado e subtasks por persona adicionadas às tasks de F00, F01a e F01b.
-- [2026-09-14] Tasks criadas: F01a `public-api-core` (8) e F01b `public-api-surface` (5); F00 `project-setup` especificada (Medium). pnpm 12.4.1 detectado e fixado na spec.## Lessons Learned (Last 5)
+- [2026-09-14] Fluxo PO/DEV/QA configurado: agentes `po`, `dev` e `qa` criados em `.claude/agents/`, CONVENTIONS.md atualizado e subtasks por persona adicionadas às tasks de F00, F01a e F01b.## Lessons Learned (Last 5)
 - [2026-09-14] Agentes definidos em `.claude/agents/` durante a sessão só ficam disponíveis após reiniciar; até lá, use `general-purpose` com `model` e as instruções do arquivo (o esforço não pode ser fixado). QA de tipos precisa de temporários dentro do escopo do tsconfig (`test/__qa__/`). pnpm 12 exige `allowBuilds` para pacotes com build script (lefthook, esbuild); worktrees instaladas com `--ignore-scripts` escondem isso, então é preciso validar `pnpm install` no master a cada integração.
 - [2026-09-14] esbuild ignora `emitDecoratorMetadata` (não emite `design:paramtypes`); bibliotecas dependentes de metadata exigem transform com SWC ou tsc antes do bundle.
 - [2026-09-14] Uma função de decorator com assinatura dupla (`(target, key, descriptor)` & `(value, context)`) passa no type-check e roda nos modos legado e TC39; TC39 não aceita decorators de parâmetro (TS1206).

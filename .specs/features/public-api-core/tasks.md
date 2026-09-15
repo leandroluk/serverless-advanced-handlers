@@ -154,11 +154,12 @@
   - O mesmo identificador funciona como valor e como tipo.
 - **Gate**: `pnpm vitest run --typecheck test/types/di-decorators.test-d.ts`
 - **Subtasks**:
-  - [ ] PO — critérios de aceite
-  - [ ] DEV — implementação + gate
-  - [ ] QA — verificação independente
-  - [ ] PO — aceite
-  - [ ] Commit
+  - [x] PO — critérios de aceite (8 ACs; sugestão de marcador no erro fica para o compilador `SAH206`)
+  - [x] DEV — implementação + gate (23/23; recomeçada após limite de sessão)
+  - [x] QA — verificação independente (PASS, sem defeitos)
+  - [x] PO — aceite (ACCEPTED)
+  - [x] Commit
+- **Achado (fora do escopo):** `InjectionToken<T>` é estrutural, então qualquer `{ description: string }` satisfaz `Token`. Registrado como quick fix no STATE.
 
 ## T-007: Decorators e marcadores HTTP
 - **REQ**: REQ-040, REQ-041, REQ-042 (`HttpCode`), REQ-043, REQ-045, REQ-050, REQ-007
