@@ -8,6 +8,7 @@ export type {
 export * from '#/decorators/di';
 export * from '#/decorators/dual';
 export * from '#/decorators/http';
+export * from '#/decorators/openapi';
 export * from '#/di/providers';
 export * from '#/di/tokens';
 export {

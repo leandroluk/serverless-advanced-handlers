@@ -73,3 +73,10 @@
 - [2026-09-14] Q1: classes aninhadas tipadas como instância via `v.instance(Cls)`; `Cls.encode` tipado como `output | input` para aceitar linhas cruas.
 
 ---
+
+## Archive — 2026-09-15 (compaction 9)
+
+### Progress
+- [2026-09-14] public-api-core T-003 complete. Gate: 22/22 pass + `pnpm check`. QA PASS (14/14 AC, sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(di)`. [REQ-031..035]
+
+---

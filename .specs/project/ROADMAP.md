@@ -8,7 +8,7 @@ Fonte: [INSIGHT.md §11](../../INSIGHT.md). Cada feature referencia os REQs do c
 | F00 | `project-setup`       | —            | —                                   | Concluída            |
 | F01 | `public-api`          | —            | —                                   | Contrato concluído (spec + design) |
 | F01a| `public-api-core`     | —            | F00, F01                            | Concluída (8/8)      |
-| F01b| `public-api-surface`  | —            | F01a                                | Execute (1/5)        |
+| F01b| `public-api-surface`  | —            | F01a                                | Execute (2/5)        |
 | F02 | `poc-risks`           | Fase 0       | F01                                 | Planejada            |
 | F03 | `validation-engine`   | Fase 1       | F01                                 | Planejada            |
 | F04 | `class-factory`       | Fase 1       | F03                                 | Planejada            |

@@ -12,9 +12,8 @@ Fase **Tasks** concluída para a superfície declarativa da API:
 Fluxo de execução por task definido com as personas **PO / DEV / QA** em agentes separados (`.claude/agents/`: `po` Haiku 4.5, `dev` Opus 5 high, `qa` Sonnet 5 medium), documentado em CONVENTIONS.md, com subtasks por persona em cada task.
 
 **F00 concluída.** **F01a `public-api-core` concluída (8/8)**, cada task integrada no master com commit próprio. **F01b `public-api-surface`:**
-- T-001 concluída;
-- T-002 e T-003 em QA;
-- T-004 em DEV;
+- T-001 e T-002 concluídas;
+- T-003 e T-004 aceitas, aguardando integração;
 - T-005 (snapshot) pendente das demais.
 
 Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica os patches e consolida os barrels. Agentes `po`/`dev`/`qa` registrados desde o reinício da sessão.
@@ -30,7 +29,7 @@ Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica
 - [x] public-api-core T-007: Decorators e marcadores HTTP — Execute phase [P2]
 - [x] public-api-core T-008: `HttpResult` e exceções HTTP — Execute phase [P2]
 - [x] public-api-surface T-001: Contratos de pipeline e tokens globais — Execute phase [P1]
-- [ ] public-api-surface T-002: Decorators OpenAPI — Execute phase [P1]
+- [x] public-api-surface T-002: Decorators OpenAPI — Execute phase [P1]
 - [ ] public-api-surface T-003: Decorator `@LambdaConfig` — Execute phase [P1]
 - [ ] public-api-surface T-004: Decorators de pipeline e `Reflector` — Execute phase [P2]
 - [ ] public-api-surface T-005: Snapshot e inventário da API pública — Execute phase [P3]
@@ -67,6 +66,7 @@ Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica
 - [2026-09-14] Q2: rota com corpo sem schema `Class()` gera erro de build por padrão; `responses.missingSchema: warn` rebaixa para warning.
 
 ## Recent Progress (Last 10)
+- [2026-09-15] public-api-surface T-002 complete. Gate: typecheck 14/14 + spec de runtime 37/37 + `pnpm check`/`lint:ci`/`test` (424/424)/`build`. QA PASS, PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(decorators)` OpenAPI (este commit). [REQ-070]
 - [2026-09-15] Quick task (usuário) — exceções HTTP 4xx/5xx restantes complete. Gate: 258/258 + `pnpm test` 373/373. QA PASS, PO ACCEPTED. REQ-051 ampliada (35 subclasses). Integração feita com `git stash --keep-index` para separar do commit da T-007. Commit: `feat(http)` exceptions (este commit). [REQ-051]
 - [2026-09-15] public-api-core T-007 complete. Gate: 18/18 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. **F01a `public-api-core` concluída (8/8).** Commit: `feat(decorators)` HTTP (este commit). [REQ-007, REQ-040..043, REQ-045, REQ-050]
 - [2026-09-15] public-api-core T-006 complete. Gate: 23/23 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(decorators)` DI (este commit). [REQ-004, REQ-005, REQ-007, REQ-030, REQ-031, REQ-033]
@@ -76,8 +76,6 @@ Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica
 - [2026-09-14] public-api-core T-002 complete. Gate: 10/10 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: forma TC39 de `DualMethodDecorator` genérica em `This` (design decisão 16). Commit: `feat(decorators)` (este commit). [REQ-004, REQ-005, REQ-007]
 - [2026-09-14] public-api-core T-005 complete. Gate: 10/10 pass + `pnpm check`. QA PASS (D-1 ratificado, D-2 corrigido pelo DEV), PO ACCEPTED. SPEC_DEVIATION: `AnyAdvancedClass` (design decisão 15). Commit: `feat(class)` (este commit). [REQ-020..026]
 - [2026-09-14] public-api-core T-004 complete. Gate: 8/8 pass + `pnpm check`. QA PASS (11/11 AC; augmentation validada também pelo pacote gerado), PO ACCEPTED. SPEC_DEVIATION: `HttpStatus` = paridade NestJS (56 membros) + 511, sem códigos IANA ausentes no NestJS. Commit: `feat(http)` (este commit). [REQ-042, REQ-045, REQ-053]
-- [2026-09-14] public-api-core T-003 complete. Gate: 22/22 pass + `pnpm check`. QA PASS (14/14 AC, sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(di)` (este commit). [REQ-031..035]
-
 ## Lessons Learned (Last 5)
 - [2026-09-14] Agentes definidos em `.claude/agents/` durante a sessão só ficam disponíveis após reiniciar; até lá, use `general-purpose` com `model` e as instruções do arquivo (o esforço não pode ser fixado). QA de tipos precisa de temporários dentro do escopo do tsconfig (`test/__qa__/`). pnpm 12 exige `allowBuilds` para pacotes com build script (lefthook, esbuild); worktrees instaladas com `--ignore-scripts` escondem isso, então é preciso validar `pnpm install` no master a cada integração.
 - [2026-09-14] esbuild ignora `emitDecoratorMetadata` (não emite `design:paramtypes`); bibliotecas dependentes de metadata exigem transform com SWC ou tsc antes do bundle.

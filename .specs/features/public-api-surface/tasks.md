@@ -48,11 +48,14 @@
   - Os atalhos não aceitam `status`.
 - **Gate**: `pnpm vitest run --typecheck test/types/openapi-decorators.test-d.ts`
 - **Subtasks**:
-  - [ ] PO — critérios de aceite
-  - [ ] DEV — implementação + gate
-  - [ ] QA — verificação independente
-  - [ ] PO — aceite
-  - [ ] Commit
+  - [x] PO — critérios de aceite
+  - [x] DEV — implementação + gate (typecheck 14/14; spec de runtime `test/openapi-decorators.spec.ts` 37/37)
+  - [x] QA — verificação independente (PASS)
+  - [x] PO — aceite (ACCEPTED)
+  - [x] Commit
+- **Notas de execução:**
+  - Integrado no barrel raiz via `export * from '#/decorators/openapi'`, que também expõe `OpenapiOperationOptions`, `OpenapiResponseOptions` e `ResponseSchema`.
+  - Suíte completa: 424/424.
 
 ## T-003: Decorator `@LambdaConfig`
 - **REQ**: REQ-080
