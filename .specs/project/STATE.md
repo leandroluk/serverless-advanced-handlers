@@ -10,7 +10,7 @@ Além das 21 tasks, dois itens fora do fluxo de feature: quick task do usuário 
 
 Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43 comunidades) e docs de codebase `STRUCTURE.md`/`INTEGRATIONS.md` criados.
 
-Próximo passo em aberto: especificar F02 `poc-risks` (ver ROADMAP.md) — ainda não iniciado, aguardando sinal do usuário sobre prioridade/escopo.
+**F02 `poc-risks`: Specify → Design → Tasks concluídos.** 5 tasks prontas para Execute (T-201/204/205/206 em P1, T-207 em P2) — ver `.specs/features/poc-risks/{spec,design,tasks}.md`. Nenhum experimento rodado ainda.
 
 ## Todos
 - [x] F00 `project-setup` — Execute phase
@@ -29,13 +29,22 @@ Próximo passo em aberto: especificar F02 `poc-risks` (ver ROADMAP.md) — ainda
 - [x] public-api-surface T-005: Snapshot e inventário da API pública — Execute phase [P3]
 - [x] Quick fix: tornar `InjectionToken<T>` nominal (ex.: campo privado) — hoje qualquer `{ description: string }` satisfaz `Token` (achado do DEV na public-api-core T-006)
 - [x] Quick task: exceções HTTP 4xx/5xx restantes (autoria do usuário) — QA → PO → commit `feat(http)`
-- [ ] Especificar F02 `poc-risks`
+- [x] Especificar F02 `poc-risks`
+- [x] Design phase para F02 `poc-risks`
+- [x] Tasks phase para F02 `poc-risks` (T-201, T-204, T-205, T-206 em P1; T-207 em P2)
+- [ ] Execute F02 T-201: plugin loader + `nodejs24.x` + `serverless-offline` (Serverless v3, osls 3.x/4.x)
+- [ ] Execute F02 T-204: bundle ESM com dependência CJS real
+- [ ] Execute F02 T-205: SWC no modo B (decorators legado + `emitDecoratorMetadata`)
+- [ ] Execute F02 T-206: source maps encadeados (AST transform → bundle)
+- [ ] Execute F02 T-207: harness de benchmark de granularidade (sem deploy real)
 - [ ] Instalar o hook de pós-commit do graphify (`.git/hooks/post-commit`) — bloqueado pelo classificador de auto mode nesta sessão; até lá, rodar `graphify update . --no-viz --code-only` manualmente após cada commit relevante
 
 ## Active Blockers
 - none
 
 ## Recent Decisions (Last 15)
+- [2026-09-15] F02 `poc-risks` design + tasks concluídos: 5 tasks (T-201/204/205/206 em P1, T-207 em P2). Harness de cada experimento é descartável (scratchpad, nunca worktree git, nunca dependência nova em `package.json` da lib) — só o veredito escrito (`FINDINGS-<REQ>.md`) é commitado. Sem QA dedicado (não há código pra verificar); orquestrador substitui o PO revisando a evidência.
+- [2026-09-15] F02 `poc-risks` especificada (REQ-201..207, um risco do ROADMAP por REQ). Escopo: experimentos descartáveis fora de `src/` (scratchpad/worktree, nunca commitados como código), só o veredito escrito entra no repo. REQ-207 (benchmark de cold start) para no artefato pronto — deploy real em AWS fica sob autorização explícita, sessão separada. Descoberta: AWS CLI configurado mas rede desta sessão falha SSL contra endpoints AWS.
 - [2026-09-15] REQ-051 ampliada, a pedido do usuário (que implementou): uma subclasse de `HttpException` para cada status 4xx/5xx do `HttpStatus` (35 no total), com paridade NestJS. Tratada como quick task com QA e commit próprio.
 - [2026-09-14] `AnyAdvancedClass` é a restrição para "qualquer classe `Class()`" (decorators de transporte, `instance()`, `ResponseSchema`), porque `AdvancedClass` puro rejeita classes concretas por contravariância do construtor (design decisão 15).
 - [2026-09-14] Execução com personas PO/DEV/QA em agentes separados: `po` Haiku 4.5 (somente leitura), `dev` Opus 5 high, `qa` Sonnet 5 medium (verifica e reporta, sem editar; temporários em `.qa/`); até 3 ciclos DEV↔QA antes de escalar ao usuário; orquestrador faz os commits.
@@ -54,9 +63,6 @@ Próximo passo em aberto: especificar F02 `poc-risks` (ver ROADMAP.md) — ainda
 - [2026-09-14] Testes: `overrideProvider({ provide, useValue | useClass | useFactory, inject? })` no formato de provider do `@Module`, variádico, com estratégias mutuamente excludentes (tipagem e runtime); mesmo formato em `overrideGuard/Interceptor/Filter`.
 - [2026-09-14] Ferramental: Vitest, oxlint + oxfmt, Conventional Commits (commitlint), lefthook e pnpm, espelhando o monorepo Metha (hooks sem turbo por ser pacote único).
 - [2026-09-14] Q4: guards/interceptors/filters usam `ExecutionContext` com paridade NestJS + `Reflector` alimentado por metadados gerados no build.
-- [2026-09-14] Q3: corpo de erro default compatível com NestJS; RFC 9457 via `errors.format: problem-json`.
-- [2026-09-14] Q2: rota com corpo sem schema `Class()` gera erro de build por padrão; `responses.missingSchema: warn` rebaixa para warning.
-
 ## Recent Progress (Last 10)
 - [2026-09-15] Grafo do código construído (`graphify . --code-only`, sem chave de LLM): 930 nós, 1890 arestas, 43 comunidades, sem ciclos de import. Criados `STRUCTURE.md` e `INTEGRATIONS.md`; `ARCHITECTURE.md`/`CONCERNS.md` anotados com o estado atual do código. Hook de pós-commit não instalado (bloqueado pelo auto mode).
 - [2026-09-15] Quick fix: `InjectionToken<T>` tornado nominal (`declare private readonly __type: T`, antes público e opcional). Gate: typecheck 23/23 + suíte completa 480/480 + `pnpm check`/`lint:ci`/`build`. QA PASS (reproduziu rejeição TS2741/TS2322 e provou que os `@ts-expect-error` não eram mortos via revert temporário), PO ACCEPTED. Snapshot da API pública (T-005) atualizado para refletir a nova forma. Commit: `fix(di)` (este commit).
