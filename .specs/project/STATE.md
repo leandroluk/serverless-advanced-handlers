@@ -11,9 +11,8 @@ Fase **Tasks** concluída para a superfície declarativa da API:
 
 Fluxo de execução por task definido com as personas **PO / DEV / QA** em agentes separados (`.claude/agents/`: `po` Haiku 4.5, `dev` Opus 5 high, `qa` Sonnet 5 medium), documentado em CONVENTIONS.md, com subtasks por persona em cada task.
 
-**F00 concluída.** **F01a `public-api-core` concluída (8/8)**, cada task integrada no master com commit próprio. **F01b `public-api-surface`:**
-- T-001..T-004 concluídas;
-- T-005 (snapshot) pendente, última task da fase.
+**F00 concluída.** **F01a `public-api-core` concluída (8/8)**, cada task integrada no master com commit próprio. **F01b `public-api-surface` concluída (5/5)**, cada task integrada no master com commit próprio.
+- T-001..T-005 concluídas. **F01b `public-api-surface` concluída (5/5).**
 
 Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica os patches e consolida os barrels. Agentes `po`/`dev`/`qa` registrados desde o reinício da sessão.
 
@@ -31,7 +30,7 @@ Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica
 - [x] public-api-surface T-002: Decorators OpenAPI — Execute phase [P1]
 - [x] public-api-surface T-003: Decorator `@LambdaConfig` — Execute phase [P1]
 - [x] public-api-surface T-004: Decorators de pipeline e `Reflector` — Execute phase [P2]
-- [ ] public-api-surface T-005: Snapshot e inventário da API pública — Execute phase [P3]
+- [x] public-api-surface T-005: Snapshot e inventário da API pública — Execute phase [P3]
 - [ ] Quick fix: tornar `InjectionToken<T>` nominal (ex.: campo privado) — hoje qualquer `{ description: string }` satisfaz `Token` (achado do DEV na public-api-core T-006)
 - [x] Quick task: exceções HTTP 4xx/5xx restantes (autoria do usuário) — QA → PO → commit `feat(http)`
 - [ ] Especificar F02 `poc-risks`
@@ -64,6 +63,7 @@ Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica
 - [2026-09-14] Q2: rota com corpo sem schema `Class()` gera erro de build por padrão; `responses.missingSchema: warn` rebaixa para warning.
 
 ## Recent Progress (Last 10)
+- [2026-09-15] public-api-surface T-005 complete. Gate: 4/4 + suíte completa 479/479 + `pnpm check`/`lint:ci`/`build`. QA PASS (reproduziu adversarial e determinismo independentemente), PO ACCEPTED. SPEC_DEVIATION: snapshot resolve chunks internos do tsdown e inlina 5 tipos de DI em vez de reexport vazio. **F01b `public-api-surface` concluída (5/5).** Commit: `test(public-api)` (este commit). [REQ-001]
 - [2026-09-15] public-api-surface T-004 complete. Gate: spec 23/23 + typecheck 15/15 + `pnpm check`/`lint:ci`/`test` (475/475)/`build`. QA PASS, PO ACCEPTED. SPEC_DEVIATION: none. `/runtime` passa a exportar `defineReflectMetadata`. Commit: `feat(decorators)` pipeline/Reflector (este commit). [REQ-060, REQ-063, REQ-066]
 - [2026-09-15] public-api-surface T-003 complete. Gate: typecheck 6/6 + spec de modos 7/7 + `pnpm check`/`lint:ci`/`test` (437/437)/`build`. QA PASS (D-1 corrigido), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(decorators)` LambdaConfig (este commit). [REQ-080]
 - [2026-09-15] public-api-surface T-002 complete. Gate: typecheck 14/14 + spec de runtime 37/37 + `pnpm check`/`lint:ci`/`test` (424/424)/`build`. QA PASS, PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(decorators)` OpenAPI (este commit). [REQ-070]

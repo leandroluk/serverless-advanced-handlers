@@ -3,7 +3,7 @@ import {resolve} from 'node:path';
 import {configDefaults, defineConfig} from 'vitest/config';
 
 /** Specs that exercise the built package; the `dist` project builds it once per run (`test/setup/build-dist.ts`). */
-const distSpecs = ['test/entrypoints.spec.ts', 'test/boundaries.spec.ts'];
+const distSpecs = ['test/entrypoints.spec.ts', 'test/boundaries.spec.ts', 'test/public-api.spec.ts'];
 
 export default defineConfig({
   resolve: {

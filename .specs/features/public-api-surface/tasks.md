@@ -116,8 +116,15 @@
   - Remover um export faz o teste falhar (verificado e revertido).
 - **Gate**: `pnpm build && pnpm vitest run test/public-api.spec.ts`
 - **Subtasks**:
-  - [ ] PO — critérios de aceite
-  - [ ] DEV — implementação + gate
-  - [ ] QA — verificação independente
-  - [ ] PO — aceite
-  - [ ] Commit
+  - [x] PO — critérios de aceite (10 ACs; comparação por conjunto, snapshot normalizado ordenado alfabeticamente)
+  - [x] DEV — implementação + gate (4/4; suíte completa 479/479; teste adversarial reproduzido e revertido)
+  - [x] QA — verificação independente (PASS; reproduziu o adversarial, comparou builds byte a byte, inspecionou o chunk resolvido)
+  - [x] PO — aceite (ACCEPTED)
+  - [x] Commit
+- **Notas de execução:**
+  - `ROOT_EXPORTS`/`RUNTIME_EXPORTS` em `test/public-api.spec.ts` derivados de `src/index.ts`/`src/runtime/index.ts` (130 + 1 nomes).
+  - `/testing` e `/plugin` ficam fora do inventário (ainda `export {}`).
+  - SPEC_DEVIATION aceita: o snapshot resolve chunks internos do tsdown e inlina o corpo real de `Token`, `TokenValue`, `Type`, `InjectionToken` e `ReflectTarget`, em vez de deixá-los como reexport vazio — coerente com REQ-001 (superfície completa, mitigação de quebras acidentais).
+  - `vitest.config.ts` ganhou `test/public-api.spec.ts` no array `distSpecs` (mesmo padrão de `entrypoints.spec.ts`/`boundaries.spec.ts`), necessário para o `globalSetup` de build rodar antes do teste.
+
+**F01b `public-api-surface` concluída (5/5).**

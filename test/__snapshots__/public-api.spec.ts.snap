@@ -1,0 +1,555 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`public API surface (REQ-001) > root entry (.) keeps its declaration snapshot 1`] = `
+"export declare const APP_FILTER: InjectionToken<ExceptionFilter>;
+
+export declare const APP_GUARD: InjectionToken<CanActivate>;
+
+export declare const APP_INTERCEPTOR: InjectionToken<Interceptor>;
+
+interface AdvancedClass<S extends z.ZodObject = z.ZodObject> {
+    new (data: z.output<S>): z.output<S>;
+    readonly object: S;
+    readonly shape: S['shape'];
+    readonly schema: z.ZodCodec<S, z.ZodType<z.output<S>>>;
+    omit: S['omit'];
+    pick: S['pick'];
+    partial: S['partial'];
+    extend: S['extend'];
+    parse<T extends AbstractConstructor>(this: T, input: unknown): InstanceType<T>;
+    safeParse<T extends AbstractConstructor>(this: T, input: unknown): z.ZodSafeParseResult<InstanceType<T>>;
+    encode(value: z.output<S> | z.input<S>): z.input<S>;
+}
+
+type AdvancedClassGuard = (value: unknown) => value is AdvancedClass;
+
+type AnyAdvancedClass = AbstractConstructor & Pick<AdvancedClass, keyof AdvancedClass>;
+
+interface ArgumentsHost {
+    getType(): 'http';
+    getArgs(): unknown[];
+    switchToHttp(): HttpArgumentsHost;
+    switchToRpc(): never;
+    switchToWs(): never;
+    getLambdaContext(): LambdaContext;
+}
+
+export declare class BadGatewayException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class BadRequestException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+interface CallHandler<T = unknown> {
+    handle(): Promise<T>;
+}
+
+interface CanActivate {
+    canActivate(context: ExecutionContext): boolean | Promise<boolean>;
+}
+
+export declare function Catch(...exceptions: Type<Error>[]): DualClassDecorator;
+
+type ClassFactory = <S extends z.ZodObject>(source: S | AdvancedClass<S>) => AdvancedClass<S>;
+
+export type ClassProvider<T = unknown> = {
+    provide: Token<T>;
+    useClass: Type<T>;
+    scope?: Scope;
+} & Forbid<'useClass'>;
+
+export declare class ConflictException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export type DualClassDecorator = ((target: DecoratableClass) => void) & ((value: DecoratableClass, context: ClassDecoratorContext) => void);
+
+export type DualClassOrMethodDecorator = DualClassDecorator & DualMethodDecorator;
+
+export type DualMethodDecorator = ((target: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => void) & (<This>(value: DecoratableMethod<This>, context: ClassMethodDecoratorContext<This>) => void);
+
+export interface DynamicModule extends ModuleMetadata {
+    module: Type;
+    global?: boolean;
+}
+
+interface ExceptionFilter<E = unknown> {
+    catch(exception: E, host: ArgumentsHost): unknown | Promise<unknown>;
+}
+
+interface ExecutionContext extends ArgumentsHost {
+    getClass<T = unknown>(): Type<T>;
+    getHandler(): (...args: never[]) => unknown;
+}
+
+export type ExistingProvider<T = unknown> = {
+    provide: Token<T>;
+    useExisting: Token<T>;
+} & Forbid<'useExisting'>;
+
+export declare class ExpectationFailedException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export type FactoryProvider<T = unknown> = {
+    provide: Token<T>;
+    useFactory: (...deps: never[]) => T | Promise<T>;
+    inject?: readonly (Token | {
+        token: Token;
+        optional: true;
+    })[];
+    scope?: Scope;
+} & Forbid<'useFactory' | 'inject'>;
+
+export declare class FailedDependencyException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class ForbiddenException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class GatewayTimeoutException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare function Global(): DualClassDecorator;
+
+export declare class GoneException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+interface HttpArgumentsHost {
+    getRequest<T = HttpRequest>(): T;
+    getResponse<T = HttpResponseState>(): T;
+}
+
+export declare function HttpBody(_cls?: AnyAdvancedClass): ParameterDecorator;
+
+export type HttpBody<T> = T;
+
+export declare function HttpCode(_status: HttpStatus | number): DualMethodDecorator;
+
+export declare function HttpController(_prefix?: string): DualClassDecorator;
+
+export declare function HttpCookies(_cls?: AnyAdvancedClass): ParameterDecorator;
+
+export type HttpCookies<T> = T;
+
+export declare function HttpDelete(_path?: string): DualMethodDecorator;
+
+export declare class HttpException extends Error {
+    #private;
+    readonly status: number;
+    constructor(status: HttpStatus | number, response?: string | Record<string, unknown>);
+    getResponse(): string | Record<string, unknown>;
+}
+
+export declare function HttpForm(_cls?: AnyAdvancedClass): ParameterDecorator;
+
+export type HttpForm<T> = T;
+
+export declare function HttpGet(_path?: string): DualMethodDecorator;
+
+export declare function HttpHead(_path?: string): DualMethodDecorator;
+
+export declare function HttpHeaders(_cls?: AnyAdvancedClass): ParameterDecorator;
+
+export type HttpHeaders<T> = T;
+
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS';
+
+export declare function HttpOptions(_path?: string): DualMethodDecorator;
+
+export declare function HttpParams(_cls?: AnyAdvancedClass): ParameterDecorator;
+
+export type HttpParams<T> = T;
+
+export declare function HttpPatch(_path?: string): DualMethodDecorator;
+
+export declare function HttpPost(_path?: string): DualMethodDecorator;
+
+export declare function HttpPut(_path?: string): DualMethodDecorator;
+
+export declare function HttpQuery(_cls?: AnyAdvancedClass): ParameterDecorator;
+
+export type HttpQuery<T> = T;
+
+export declare function HttpRequest(): ParameterDecorator;
+
+export interface HttpRequest {
+    readonly method: HttpMethod;
+    readonly path: string;
+    readonly route: string;
+    readonly headers: Readonly<Record<string, string>>;
+    readonly query: Readonly<Record<string, string | string[]>>;
+    readonly params: Readonly<Record<string, string>>;
+    readonly cookies: Readonly<Record<string, string>>;
+    readonly rawBody?: Buffer;
+    readonly sourceIp?: string;
+    readonly event: APIGatewayProxyEventV2 | APIGatewayProxyEvent;
+}
+
+export declare function HttpResponseHeader(_name: string, _value: string): DualMethodDecorator;
+
+interface HttpResponseState {
+    status?: number;
+    headers: Record<string, string>;
+    cookies: string[];
+}
+
+export declare class HttpResult<T = unknown> {
+    readonly body: T;
+    readonly status: HttpStatus | number | undefined;
+    readonly headers: Record<string, string>;
+    readonly cookies: string[];
+    constructor(body: T, init?: {
+        status?: HttpStatus | number;
+        headers?: Record<string, string>;
+        cookies?: string[];
+    });
+}
+
+export declare enum HttpStatus {
+    CONTINUE = 100,
+    SWITCHING_PROTOCOLS = 101,
+    PROCESSING = 102,
+    EARLYHINTS = 103,
+    OK = 200,
+    CREATED = 201,
+    ACCEPTED = 202,
+    NON_AUTHORITATIVE_INFORMATION = 203,
+    NO_CONTENT = 204,
+    RESET_CONTENT = 205,
+    PARTIAL_CONTENT = 206,
+    MULTI_STATUS = 207,
+    ALREADY_REPORTED = 208,
+    CONTENT_DIFFERENT = 210,
+    AMBIGUOUS = 300,
+    MOVED_PERMANENTLY = 301,
+    FOUND = 302,
+    SEE_OTHER = 303,
+    NOT_MODIFIED = 304,
+    TEMPORARY_REDIRECT = 307,
+    PERMANENT_REDIRECT = 308,
+    BAD_REQUEST = 400,
+    UNAUTHORIZED = 401,
+    PAYMENT_REQUIRED = 402,
+    FORBIDDEN = 403,
+    NOT_FOUND = 404,
+    METHOD_NOT_ALLOWED = 405,
+    NOT_ACCEPTABLE = 406,
+    PROXY_AUTHENTICATION_REQUIRED = 407,
+    REQUEST_TIMEOUT = 408,
+    CONFLICT = 409,
+    GONE = 410,
+    LENGTH_REQUIRED = 411,
+    PRECONDITION_FAILED = 412,
+    PAYLOAD_TOO_LARGE = 413,
+    URI_TOO_LONG = 414,
+    UNSUPPORTED_MEDIA_TYPE = 415,
+    REQUESTED_RANGE_NOT_SATISFIABLE = 416,
+    EXPECTATION_FAILED = 417,
+    I_AM_A_TEAPOT = 418,
+    MISDIRECTED = 421,
+    UNPROCESSABLE_ENTITY = 422,
+    LOCKED = 423,
+    FAILED_DEPENDENCY = 424,
+    PRECONDITION_REQUIRED = 428,
+    TOO_MANY_REQUESTS = 429,
+    UNRECOVERABLE_ERROR = 456,
+    INTERNAL_SERVER_ERROR = 500,
+    NOT_IMPLEMENTED = 501,
+    BAD_GATEWAY = 502,
+    SERVICE_UNAVAILABLE = 503,
+    GATEWAY_TIMEOUT = 504,
+    HTTP_VERSION_NOT_SUPPORTED = 505,
+    INSUFFICIENT_STORAGE = 507,
+    LOOP_DETECTED = 508,
+    NETWORK_AUTHENTICATION_REQUIRED = 511
+}
+
+export declare class HttpVersionNotSupportedException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export type IamResource = string | Record<string, unknown>;
+
+export interface IamStatement {
+    Sid?: string;
+    Effect: 'Allow' | 'Deny';
+    Action: string | readonly string[];
+    Resource: IamResource | readonly IamResource[];
+    Condition?: Record<string, unknown>;
+}
+
+export declare class ImATeapotException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare function Inject(token: Token): ParameterDecorator;
+
+export type Inject<K extends Token, T = TokenValue<K>> = T;
+
+export declare function Injectable(options?: {
+    scope?: Scope;
+}): DualClassDecorator;
+
+declare class InjectionToken<T> {
+    readonly __type?: T;
+    readonly description: string;
+    constructor(description: string);
+}
+
+type InstanceSchemaFactory = <T extends AnyAdvancedClass>(cls: T) => z.ZodCodec<T['object'], z.ZodType<InstanceType<T>>>;
+
+export declare class InsufficientStorageException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+interface Interceptor<T = unknown, R = unknown> {
+    intercept(context: ExecutionContext, next: CallHandler<T>): Promise<R>;
+}
+
+export declare class InternalServerErrorException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare function LambdaConfig(options: LambdaConfigOptions): DualClassOrMethodDecorator;
+
+export interface LambdaConfigOptions {
+    name?: string;
+    memorySize?: number;
+    timeout?: number;
+    reservedConcurrency?: number;
+    environment?: Record<string, string>;
+    iamRoleStatements?: readonly IamStatement[];
+    description?: string;
+    tags?: Record<string, string>;
+}
+
+export declare function LambdaContext(): ParameterDecorator;
+
+export type LambdaContext = Context;
+
+export declare class LengthRequiredException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class LockedException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class LoopDetectedException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class MethodNotAllowedException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class MisdirectedException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare function Module(metadata: ModuleMetadata): DualClassDecorator;
+
+export interface ModuleMetadata {
+    imports?: readonly (Type | DynamicModule)[];
+    controllers?: readonly Type[];
+    providers?: readonly Provider[];
+    exports?: readonly (Token | DynamicModule)[];
+}
+
+export declare class NetworkAuthenticationRequiredException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class NotAcceptableException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class NotFoundException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class NotImplementedException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export interface OnModuleDestroy {
+    onModuleDestroy(): void | Promise<void>;
+}
+
+export interface OnModuleInit {
+    onModuleInit(): void | Promise<void>;
+}
+
+export declare function OpenapiBadRequestResponse(options: Omit<OpenapiResponseOptions, 'status'>): DualMethodDecorator;
+
+export declare function OpenapiConflictResponse(options: Omit<OpenapiResponseOptions, 'status'>): DualMethodDecorator;
+
+export declare function OpenapiConsumes(...mediaTypes: string[]): DualClassOrMethodDecorator;
+
+export declare function OpenapiCreatedResponse(options: Omit<OpenapiResponseOptions, 'status'>): DualMethodDecorator;
+
+export declare function OpenapiExclude(): DualClassOrMethodDecorator;
+
+export declare function OpenapiForbiddenResponse(options: Omit<OpenapiResponseOptions, 'status'>): DualMethodDecorator;
+
+export declare function OpenapiNoContentResponse(options: Omit<OpenapiResponseOptions, 'status'>): DualMethodDecorator;
+
+export declare function OpenapiNotFoundResponse(options: Omit<OpenapiResponseOptions, 'status'>): DualMethodDecorator;
+
+export declare function OpenapiOkResponse(options: Omit<OpenapiResponseOptions, 'status'>): DualMethodDecorator;
+
+export declare function OpenapiOperation(options: OpenapiOperationOptions): DualMethodDecorator;
+
+export interface OpenapiOperationOptions {
+    summary?: string;
+    description?: string;
+    operationId?: string;
+    deprecated?: boolean;
+}
+
+export declare function OpenapiProduces(...mediaTypes: string[]): DualClassOrMethodDecorator;
+
+export declare function OpenapiResponse(options: OpenapiResponseOptions): DualMethodDecorator;
+
+export interface OpenapiResponseOptions {
+    status: HttpStatus | number;
+    description: string;
+    schema?: ResponseSchema;
+}
+
+export declare function OpenapiSecurity(name: string, scopes?: string[]): DualClassOrMethodDecorator;
+
+export declare function OpenapiTags(...tags: string[]): DualClassOrMethodDecorator;
+
+export declare function OpenapiUnauthorizedResponse(options: Omit<OpenapiResponseOptions, 'status'>): DualMethodDecorator;
+
+export declare function Optional(): ParameterDecorator;
+
+export type Optional<T> = T | undefined;
+
+export declare class PayloadTooLargeException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class PaymentRequiredException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class PreconditionFailedException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class PreconditionRequiredException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export type Provider<T = unknown> = Type<T> | ClassProvider<T> | ValueProvider<T> | FactoryProvider<T> | ExistingProvider<T>;
+
+export declare class ProxyAuthenticationRequiredException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+type ReflectTarget = Type | ((...args: never[]) => unknown);
+
+interface ReflectableDecorator<T> {
+    (value: T): DualClassOrMethodDecorator;
+    readonly key: symbol;
+}
+
+export declare class Reflector {
+    static createDecorator<T>(options?: {
+        key?: string;
+    }): ReflectableDecorator<T>;
+    get<T>(decorator: ReflectableDecorator<T>, target: ReflectTarget): T | undefined;
+    get<T = unknown>(key: MetadataKey, target: ReflectTarget): T | undefined;
+    getAllAndOverride<T>(decoratorOrKey: ReflectableDecorator<T> | MetadataKey, targets: readonly ReflectTarget[]): T | undefined;
+    getAllAndMerge<T>(decoratorOrKey: ReflectableDecorator<T[]> | MetadataKey, targets: readonly ReflectTarget[]): T[];
+}
+
+export declare class RequestTimeoutException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class RequestedRangeNotSatisfiableException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export type ResponseSchema = AnyAdvancedClass | readonly [
+    AnyAdvancedClass
+];
+
+export declare enum Scope {
+    DEFAULT = "default",
+    REQUEST = "request"
+}
+
+export declare class ServiceUnavailableException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare function SetMetadata<V>(key: string | symbol, value: V): DualClassOrMethodDecorator;
+
+type Token<T = unknown> = Type<T> | InjectionToken<T> | string | symbol;
+
+type TokenValue<K> = K extends Type<infer T> ? T : K extends InjectionToken<infer T> ? T : unknown;
+
+export declare class TooManyRequestsException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+type Type<T = unknown> = abstract new (...args: never[]) => T;
+
+export declare class UnauthorizedException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class UnprocessableEntityException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class UnrecoverableErrorException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare class UnsupportedMediaTypeException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+interface UploadedFile extends File {
+    readonly fieldname: string;
+    readonly location?: {
+        readonly bucket: string;
+        readonly key: string;
+    };
+}
+
+export declare class UriTooLongException extends HttpException {
+    constructor(message?: string | Record<string, unknown>);
+}
+
+export declare function UseFilters(...filters: Type<ExceptionFilter>[]): DualClassOrMethodDecorator;
+
+export declare function UseGuards(...guards: Type<CanActivate>[]): DualClassOrMethodDecorator;
+
+export declare function UseInterceptors(...interceptors: Type<Interceptor>[]): DualClassOrMethodDecorator;
+
+export type ValueProvider<T = unknown> = {
+    provide: Token<T>;
+    useValue: T;
+} & Forbid<'useValue'>;
+
+export declare function classDecorator(): DualClassDecorator;
+
+export declare function classOrMethodDecorator(): DualClassOrMethodDecorator;
+
+export declare function methodDecorator(): DualMethodDecorator;
+
+export declare function parameterDecorator(): ParameterDecorator;"
+`;
