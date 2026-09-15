@@ -10,6 +10,7 @@ export * from '#/decorators/dual';
 export * from '#/decorators/http';
 export * from '#/decorators/lambda';
 export * from '#/decorators/openapi';
+export {Catch, SetMetadata, UseFilters, UseGuards, UseInterceptors} from '#/decorators/pipeline';
 export * from '#/di/providers';
 export * from '#/di/tokens';
 export {
@@ -65,3 +66,5 @@ export type {
   HttpArgumentsHost,
   Interceptor,
 } from '#/pipeline';
+export {Reflector} from '#/pipeline/reflector';
+export type {ReflectableDecorator, ReflectTarget} from '#/pipeline/reflector';

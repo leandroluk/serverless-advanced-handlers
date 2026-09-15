@@ -91,11 +91,15 @@
   - O typecheck rejeita instâncias em `UseGuards`.
 - **Gate**: `pnpm vitest run --typecheck test/reflector.spec.ts`
 - **Subtasks**:
-  - [ ] PO — critérios de aceite
-  - [ ] DEV — implementação + gate
-  - [ ] QA — verificação independente
-  - [ ] PO — aceite
-  - [ ] Commit
+  - [x] PO — critérios de aceite (decisões: registro de metadados via `WeakMap`; `defineReflectMetadata` exposto só em `/runtime` para o código gerado)
+  - [x] DEV — implementação + gate (spec `test/reflector.spec.ts` 23/23; typecheck `test/types/pipeline-decorators.test-d.ts` 15/15)
+  - [x] QA — verificação independente (PASS, sem defeitos)
+  - [x] PO — aceite (ACCEPTED)
+  - [x] Commit
+- **Notas de execução:**
+  - Integrado no barrel raiz: `Catch`, `SetMetadata`, `UseFilters`, `UseGuards`, `UseInterceptors` de `#/decorators/pipeline`; `Reflector`, `ReflectableDecorator`, `ReflectTarget` de `#/pipeline/reflector`.
+  - `src/runtime/index.ts` passa a exportar `defineReflectMetadata` de `#/pipeline/metadata-registry`.
+  - Suíte completa: 475/475.
 
 ## T-005: Snapshot e inventário da API pública
 - **REQ**: REQ-001 (superfície completa), mitigação de risco do design (quebras acidentais)
