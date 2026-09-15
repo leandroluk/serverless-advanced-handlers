@@ -62,6 +62,16 @@ describe('tokens', () => {
     expectTypeOf<ConstructorParameters<typeof InjectionToken>>().toEqualTypeOf<[description: string]>();
   });
 
+  it('InjectionToken is nominal: a structurally matching plain object is not a Token', () => {
+    // @ts-expect-error a plain `{ description: string }` is not an InjectionToken instance
+    const fakeToken: InjectionToken<string> = {description: 'DATABASE_URL'};
+    // @ts-expect-error same shape, via the Token union
+    const fakeViaToken: Token<string> = {description: 'DATABASE_URL'};
+
+    expectTypeOf(fakeToken).toExtend<InjectionToken<string>>();
+    expectTypeOf(fakeViaToken).toExtend<Token<string>>();
+  });
+
   it('Token accepts classes, InjectionToken, strings and symbols', () => {
     expectTypeOf(DatabaseService).toExtend<Token>();
     expectTypeOf(DATABASE_URL).toExtend<Token>();

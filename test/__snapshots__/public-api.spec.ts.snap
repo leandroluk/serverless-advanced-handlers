@@ -298,7 +298,7 @@ export declare function Injectable(options?: {
 }): DualClassDecorator;
 
 declare class InjectionToken<T> {
-    readonly __type?: T;
+    private readonly __type;
     readonly description: string;
     constructor(description: string);
 }

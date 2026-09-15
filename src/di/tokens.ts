@@ -10,8 +10,12 @@ export type Type<T = unknown> = abstract new (...args: never[]) => T;
  * const DATABASE_URL = new InjectionToken<string>('DATABASE_URL');
  */
 export class InjectionToken<T> {
-  /** Phantom marker of `T`: exists only at the type level, so `TokenValue` can infer it. */
-  declare readonly __type?: T;
+  /**
+   * Phantom marker of `T`: exists only at the type level, so `TokenValue` can infer it.
+   * `private` makes `InjectionToken` nominal — without it, any `{ description: string }`
+   * object structurally satisfies `Token<T>`, defeating the point of a typed token.
+   */
+  declare private readonly __type: T;
 
   readonly description: string;
 
