@@ -19,6 +19,7 @@
 - **[P]**: P1
 - **Done when**: os 3×3 resultados (3 motores × 3 sub-riscos) estão documentados, cada um com veredito. Falha de instalação de algum motor (registro não acessível, etc.) é `INCONCLUSIVO` para aquele motor, não bloqueia os outros.
 - **Entrega**: `findings/FINDINGS-201.md`, `findings/FINDINGS-202.md`, `findings/FINDINGS-203.md` (pode ser um único arquivo com as 3 seções se a evidência for compartilhada — decisão do DEV, documentar a escolha)
+- **[x] Concluída.** Veredito: REQ-201 PASS, REQ-202 PASS-COM-RESSALVA (Serverless v3 tem `nodejs20.x` congelado no enum — patch de schema é requisito do F10), REQ-203 PASS nos 3 motores. Achado extra: `serverless-offline` na lista de plugins trava `sls invoke local` indefinidamente nos 3 (nota pra TESTING.md).
 
 ## T-204: Bundle ESM com dependência CJS real
 - **REQ**: REQ-204
@@ -27,6 +28,7 @@
 - **[P]**: P1
 - **Done when**: o bundle roda e produz a saída esperada, OU falha de forma reprodutível (nesse caso, documentar o erro exato e ao menos uma mitigação testada — ex.: `esbuild.build({banner, define})`, `createRequire`, etc.)
 - **Entrega**: `findings/FINDINGS-204.md`
+- **[x] Concluída.** Veredito: PASS-COM-RESSALVA. `ERR_REQUIRE_ESM` da spec original não se materializou (SPEC_DEVIATION registrada); os erros reais são `Dynamic require` (dep inlined, mitigado com banner `createRequire`) e `Named export not found` (dep external, mitigado com default import).
 
 ## T-205: SWC no modo B (decorators legado + `emitDecoratorMetadata`)
 - **REQ**: REQ-205
@@ -35,6 +37,7 @@
 - **[P]**: P1
 - **Done when**: comparação lado a lado (saída do `tsc` vs. saída do SWC) para o mesmo arquivo mostra metadata equivalente, OU divergência documentada com o que muda.
 - **Entrega**: `findings/FINDINGS-205.md`
+- **[x] Concluída.** Veredito: PASS-COM-RESSALVA. `design:paramtypes` idêntico ao `tsc` em 8 cenários; ressalvas inofensivas (design:type extra, import type-only não elidido — regra a formalizar pro F06).
 
 ## T-206: Source maps encadeados (transformação de AST → bundle)
 - **REQ**: REQ-206
@@ -43,6 +46,7 @@
 - **[P]**: P1
 - **Done when**: o stack trace resolvido aponta pra linha certa do arquivo original, OU a cadeia quebra em algum ponto (documentar onde: transformação→bundle ou bundle→runtime).
 - **Entrega**: `findings/FINDINGS-206.md`
+- **[x] Concluída.** Veredito: PASS. Cadeia resolve à linha/coluna exata do TS original; requisito concreto pro F06: o slicer precisa emitir seu próprio source map (nem `ts-morph` nem `tsc` fazem isso em TS→TS).
 
 ## T-207: Harness de benchmark de granularidade (cold start)
 - **REQ**: REQ-207

@@ -10,7 +10,7 @@ Além das 21 tasks, dois itens fora do fluxo de feature: quick task do usuário 
 
 Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43 comunidades) e docs de codebase `STRUCTURE.md`/`INTEGRATIONS.md` criados.
 
-**F02 `poc-risks`: Specify → Design → Tasks concluídos.** 5 tasks prontas para Execute (T-201/204/205/206 em P1, T-207 em P2) — ver `.specs/features/poc-risks/{spec,design,tasks}.md`. Nenhum experimento rodado ainda.
+**F02 `poc-risks`: onda P1 concluída (T-201/204/205/206), P2 (T-207) pendente.** Nenhum risco refutado; a maioria ganhou requisitos concretos de implementação para F06/F10 — ver `.specs/codebase/CONCERNS.md` e `.specs/features/poc-risks/findings/`.
 
 ## Todos
 - [x] F00 `project-setup` — Execute phase
@@ -32,11 +32,12 @@ Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43
 - [x] Especificar F02 `poc-risks`
 - [x] Design phase para F02 `poc-risks`
 - [x] Tasks phase para F02 `poc-risks` (T-201, T-204, T-205, T-206 em P1; T-207 em P2)
-- [ ] Execute F02 T-201: plugin loader + `nodejs24.x` + `serverless-offline` (Serverless v3, osls 3.x/4.x)
-- [ ] Execute F02 T-204: bundle ESM com dependência CJS real
-- [ ] Execute F02 T-205: SWC no modo B (decorators legado + `emitDecoratorMetadata`)
-- [ ] Execute F02 T-206: source maps encadeados (AST transform → bundle)
+- [x] Execute F02 T-201: plugin loader + `nodejs24.x` + `serverless-offline` (Serverless v3, osls 3.x/4.x) — PASS-COM-RESSALVA
+- [x] Execute F02 T-204: bundle ESM com dependência CJS real — PASS-COM-RESSALVA
+- [x] Execute F02 T-205: SWC no modo B (decorators legado + `emitDecoratorMetadata`) — PASS-COM-RESSALVA
+- [x] Execute F02 T-206: source maps encadeados (AST transform → bundle) — PASS
 - [ ] Execute F02 T-207: harness de benchmark de granularidade (sem deploy real)
+- [ ] Commit F02 T-201/204/205/206: findings + CONCERNS.md/spec.md atualizados
 - [ ] Instalar o hook de pós-commit do graphify (`.git/hooks/post-commit`) — bloqueado pelo classificador de auto mode nesta sessão; até lá, rodar `graphify update . --no-viz --code-only` manualmente após cada commit relevante
 
 ## Active Blockers
@@ -64,6 +65,7 @@ Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43
 - [2026-09-14] Ferramental: Vitest, oxlint + oxfmt, Conventional Commits (commitlint), lefthook e pnpm, espelhando o monorepo Metha (hooks sem turbo por ser pacote único).
 - [2026-09-14] Q4: guards/interceptors/filters usam `ExecutionContext` com paridade NestJS + `Reflector` alimentado por metadados gerados no build.
 ## Recent Progress (Last 10)
+- [2026-09-15] F02 `poc-risks` P1 (T-201, T-204, T-205, T-206) complete — 4 agentes DEV em paralelo, experimentos descartáveis fora do repo. REQ-201 PASS, REQ-202 PASS-COM-RESSALVA (Serverless v3 sem `nodejs24.x` no enum, patch de schema necessário no F10), REQ-203 PASS (3 motores); REQ-204 PASS-COM-RESSALVA (`ERR_REQUIRE_ESM` refutado, dois outros erros reais mitigados); REQ-205 PASS-COM-RESSALVA (SWC ≡ tsc em `design:paramtypes`); REQ-206 PASS (source maps encadeados, com requisito concreto pro slicer do F06). `CONCERNS.md` e `spec.md` atualizados com os achados. T-207 (P2) pendente. Commit: `docs(poc-risks)` findings (este commit).
 - [2026-09-15] Grafo do código construído (`graphify . --code-only`, sem chave de LLM): 930 nós, 1890 arestas, 43 comunidades, sem ciclos de import. Criados `STRUCTURE.md` e `INTEGRATIONS.md`; `ARCHITECTURE.md`/`CONCERNS.md` anotados com o estado atual do código. Hook de pós-commit não instalado (bloqueado pelo auto mode).
 - [2026-09-15] Quick fix: `InjectionToken<T>` tornado nominal (`declare private readonly __type: T`, antes público e opcional). Gate: typecheck 23/23 + suíte completa 480/480 + `pnpm check`/`lint:ci`/`build`. QA PASS (reproduziu rejeição TS2741/TS2322 e provou que os `@ts-expect-error` não eram mortos via revert temporário), PO ACCEPTED. Snapshot da API pública (T-005) atualizado para refletir a nova forma. Commit: `fix(di)` (este commit).
 - [2026-09-15] public-api-surface T-005 complete. Gate: 4/4 + suíte completa 479/479 + `pnpm check`/`lint:ci`/`build`. QA PASS (reproduziu adversarial e determinismo independentemente), PO ACCEPTED. SPEC_DEVIATION: snapshot resolve chunks internos do tsdown e inlina 5 tipos de DI em vez de reexport vazio. **F01b `public-api-surface` concluída (5/5).** Commit: `test(public-api)` (este commit). [REQ-001]
@@ -73,8 +75,6 @@ Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43
 - [2026-09-15] Quick task (usuário) — exceções HTTP 4xx/5xx restantes complete. Gate: 258/258 + `pnpm test` 373/373. QA PASS, PO ACCEPTED. REQ-051 ampliada (35 subclasses). Integração feita com `git stash --keep-index` para separar do commit da T-007. Commit: `feat(http)` exceptions (este commit). [REQ-051]
 - [2026-09-15] public-api-core T-007 complete. Gate: 18/18 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. **F01a `public-api-core` concluída (8/8).** Commit: `feat(decorators)` HTTP (este commit). [REQ-007, REQ-040..043, REQ-045, REQ-050]
 - [2026-09-15] public-api-core T-001 complete. Gate: 7/7 pass + `pnpm check`/`lint:ci`/`test`. QA PASS (D-1 corrigido), PO ACCEPTED. SPEC_DEVIATION: `deps.neverBundle` no `tsdown.config.ts` (evita falso negativo do teste de fronteira). Commit: `test(boundaries)` (este commit). [REQ-001, REQ-002]
-- [2026-09-14] public-api-core T-008 complete. Gate: 69/69 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(http)` exceptions (este commit). [REQ-049, REQ-051]
-
 ## Lessons Learned (Last 5)
 - [2026-09-14] Agentes definidos em `.claude/agents/` durante a sessão só ficam disponíveis após reiniciar; até lá, use `general-purpose` com `model` e as instruções do arquivo (o esforço não pode ser fixado). QA de tipos precisa de temporários dentro do escopo do tsconfig (`test/__qa__/`). pnpm 12 exige `allowBuilds` para pacotes com build script (lefthook, esbuild); worktrees instaladas com `--ignore-scripts` escondem isso, então é preciso validar `pnpm install` no master a cada integração.
 - [2026-09-14] esbuild ignora `emitDecoratorMetadata` (não emite `design:paramtypes`); bibliotecas dependentes de metadata exigem transform com SWC ou tsc antes do bundle.
