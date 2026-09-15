@@ -208,3 +208,8 @@
   - 413 e 422 usam as frases clássicas do NestJS/Node ('Payload Too Large', 'Unprocessable Entity'), não as da RFC 9110.
   - `HttpResult` guarda `headers`/`cookies` sem cópia defensiva.
   - O `name` das exceções depende de `keepNames` no bundle minificado (F10).
+- **Ampliação (quick task, autoria do usuário, 2026-09-15):**
+  - Foi adicionada uma subclasse para cada status 4xx/5xx do `HttpStatus`, 35 no total.
+  - 21 nomes têm equivalente no NestJS; os outros 14 derivam do nome do enum.
+  - A REQ-051 foi ampliada.
+  - Passou por QA (258/258) e aceite do PO.

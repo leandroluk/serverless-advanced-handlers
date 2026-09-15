@@ -35,6 +35,8 @@ Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica
 - [ ] public-api-surface T-004: Decorators de pipeline e `Reflector` — Execute phase [P2]
 - [ ] public-api-surface T-005: Snapshot e inventário da API pública — Execute phase [P3]
 - [ ] Quick fix: tornar `InjectionToken<T>` nominal (ex.: campo privado) — hoje qualquer `{ description: string }` satisfaz `Token` (achado do DEV na public-api-core T-006)
+- [x] Quick task: exceções HTTP 4xx/5xx restantes (autoria do usuário) — QA → PO → commit `feat(http)`
+- [ ] Integrar public-api-surface T-002, T-003 (aceitas) e T-004 (em QA) após o commit das exceções
 - [ ] Especificar F02 `poc-risks`
 - [ ] Construir o grafo quando houver código (`graph-spec-design . --code-only`) ou configurar chave de LLM para indexar as specs
 - [ ] Criar docs de codebase STRUCTURE e INTEGRATIONS quando houver código
@@ -43,6 +45,7 @@ Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica
 - none
 
 ## Recent Decisions (Last 15)
+- [2026-09-15] REQ-051 ampliada, a pedido do usuário (que implementou): uma subclasse de `HttpException` para cada status 4xx/5xx do `HttpStatus` (35 no total), com paridade NestJS. Tratada como quick task com QA e commit próprio.
 - [2026-09-14] `AnyAdvancedClass` é a restrição para "qualquer classe `Class()`" (decorators de transporte, `instance()`, `ResponseSchema`), porque `AdvancedClass` puro rejeita classes concretas por contravariância do construtor (design decisão 15).
 - [2026-09-14] Execução com personas PO/DEV/QA em agentes separados: `po` Haiku 4.5 (somente leitura), `dev` Opus 5 high, `qa` Sonnet 5 medium (verifica e reporta, sem editar; temporários em `.qa/`); até 3 ciclos DEV↔QA antes de escalar ao usuário; orquestrador faz os commits.
 - [2026-09-14] Commits autorizados pelo usuário: um commit por task (Conventional Commits) com código, testes e specs/STATE (Spec Gate).
@@ -62,8 +65,9 @@ Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica
 - [2026-09-14] Q4: guards/interceptors/filters usam `ExecutionContext` com paridade NestJS + `Reflector` alimentado por metadados gerados no build.
 - [2026-09-14] Q3: corpo de erro default compatível com NestJS; RFC 9457 via `errors.format: problem-json`.
 - [2026-09-14] Q2: rota com corpo sem schema `Class()` gera erro de build por padrão; `responses.missingSchema: warn` rebaixa para warning.
-- [2026-09-14] Q1: classes aninhadas tipadas como instância via `v.instance(Cls)`; `Cls.encode` tipado como `output | input` para aceitar linhas cruas.
+
 ## Recent Progress (Last 10)
+- [2026-09-15] Quick task (usuário) — exceções HTTP 4xx/5xx restantes complete. Gate: 258/258 + `pnpm test` 373/373. QA PASS, PO ACCEPTED. REQ-051 ampliada (35 subclasses). Integração feita com `git stash --keep-index` para separar do commit da T-007. Commit: `feat(http)` exceptions (este commit). [REQ-051]
 - [2026-09-15] public-api-core T-007 complete. Gate: 18/18 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. **F01a `public-api-core` concluída (8/8).** Commit: `feat(decorators)` HTTP (este commit). [REQ-007, REQ-040..043, REQ-045, REQ-050]
 - [2026-09-15] public-api-core T-006 complete. Gate: 23/23 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(decorators)` DI (este commit). [REQ-004, REQ-005, REQ-007, REQ-030, REQ-031, REQ-033]
 - [2026-09-15] public-api-surface T-001 complete. Gate: 17/17 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(pipeline)` (este commit). [REQ-060, REQ-062, REQ-065]
@@ -73,7 +77,8 @@ Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica
 - [2026-09-14] public-api-core T-005 complete. Gate: 10/10 pass + `pnpm check`. QA PASS (D-1 ratificado, D-2 corrigido pelo DEV), PO ACCEPTED. SPEC_DEVIATION: `AnyAdvancedClass` (design decisão 15). Commit: `feat(class)` (este commit). [REQ-020..026]
 - [2026-09-14] public-api-core T-004 complete. Gate: 8/8 pass + `pnpm check`. QA PASS (11/11 AC; augmentation validada também pelo pacote gerado), PO ACCEPTED. SPEC_DEVIATION: `HttpStatus` = paridade NestJS (56 membros) + 511, sem códigos IANA ausentes no NestJS. Commit: `feat(http)` (este commit). [REQ-042, REQ-045, REQ-053]
 - [2026-09-14] public-api-core T-003 complete. Gate: 22/22 pass + `pnpm check`. QA PASS (14/14 AC, sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(di)` (este commit). [REQ-031..035]
-- [2026-09-14] F00 `project-setup` complete. Gate: 5/5 pass (install, check, lint:ci, test, build) + commit-msg hook validado. QA PASS (16/16 AC), PO ACCEPTED. SPEC_DEVIATION: 3 aceitas (normalização oxfmt; `pnpm-workspace.yaml` e `.prettierignore` extras; aceite do commit-msg via hook direto) — detalhes em project-setup/spec.md. Commit: `chore: setup project` (commit inicial).## Lessons Learned (Last 5)
+
+## Lessons Learned (Last 5)
 - [2026-09-14] Agentes definidos em `.claude/agents/` durante a sessão só ficam disponíveis após reiniciar; até lá, use `general-purpose` com `model` e as instruções do arquivo (o esforço não pode ser fixado). QA de tipos precisa de temporários dentro do escopo do tsconfig (`test/__qa__/`). pnpm 12 exige `allowBuilds` para pacotes com build script (lefthook, esbuild); worktrees instaladas com `--ignore-scripts` escondem isso, então é preciso validar `pnpm install` no master a cada integração.
 - [2026-09-14] esbuild ignora `emitDecoratorMetadata` (não emite `design:paramtypes`); bibliotecas dependentes de metadata exigem transform com SWC ou tsc antes do bundle.
 - [2026-09-14] Uma função de decorator com assinatura dupla (`(target, key, descriptor)` & `(value, context)`) passa no type-check e roda nos modos legado e TC39; TC39 não aceita decorators de parâmetro (TS1206).

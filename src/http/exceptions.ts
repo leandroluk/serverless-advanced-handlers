@@ -123,6 +123,13 @@ export class UnauthorizedException extends HttpException {
   }
 }
 
+/** 402 Payment Required. */
+export class PaymentRequiredException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.PAYMENT_REQUIRED, message);
+  }
+}
+
 /** 403 Forbidden. */
 export class ForbiddenException extends HttpException {
   constructor(message?: string | Record<string, unknown>) {
@@ -137,10 +144,108 @@ export class NotFoundException extends HttpException {
   }
 }
 
+/** 405 Method Not Allowed. */
+export class MethodNotAllowedException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.METHOD_NOT_ALLOWED, message);
+  }
+}
+
+/** 406 Not Acceptable. */
+export class NotAcceptableException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.NOT_ACCEPTABLE, message);
+  }
+}
+
+/** 407 Proxy Authentication Required. */
+export class ProxyAuthenticationRequiredException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.PROXY_AUTHENTICATION_REQUIRED, message);
+  }
+}
+
+/** 408 Request Timeout. */
+export class RequestTimeoutException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.REQUEST_TIMEOUT, message);
+  }
+}
+
 /** 409 Conflict. */
 export class ConflictException extends HttpException {
   constructor(message?: string | Record<string, unknown>) {
     super(HttpStatus.CONFLICT, message);
+  }
+}
+
+/** 410 Gone. */
+export class GoneException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.GONE, message);
+  }
+}
+
+/** 411 Length Required. */
+export class LengthRequiredException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.LENGTH_REQUIRED, message);
+  }
+}
+
+/** 412 Precondition Failed. */
+export class PreconditionFailedException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.PRECONDITION_FAILED, message);
+  }
+}
+
+/** 413 Payload Too Large. */
+export class PayloadTooLargeException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.PAYLOAD_TOO_LARGE, message);
+  }
+}
+
+/** 414 URI Too Long. */
+export class UriTooLongException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.URI_TOO_LONG, message);
+  }
+}
+
+/** 415 Unsupported Media Type. */
+export class UnsupportedMediaTypeException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.UNSUPPORTED_MEDIA_TYPE, message);
+  }
+}
+
+/** 416 Range Not Satisfiable. */
+export class RequestedRangeNotSatisfiableException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE, message);
+  }
+}
+
+/** 417 Expectation Failed. */
+export class ExpectationFailedException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.EXPECTATION_FAILED, message);
+  }
+}
+
+/** 418 I'm a Teapot. */
+export class ImATeapotException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.I_AM_A_TEAPOT, message);
+  }
+}
+
+/** 421 Misdirected Request. */
+export class MisdirectedException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.MISDIRECTED, message);
   }
 }
 
@@ -151,6 +256,27 @@ export class UnprocessableEntityException extends HttpException {
   }
 }
 
+/** 423 Locked. */
+export class LockedException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.LOCKED, message);
+  }
+}
+
+/** 424 Failed Dependency. */
+export class FailedDependencyException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.FAILED_DEPENDENCY, message);
+  }
+}
+
+/** 428 Precondition Required. */
+export class PreconditionRequiredException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.PRECONDITION_REQUIRED, message);
+  }
+}
+
 /** 429 Too Many Requests. */
 export class TooManyRequestsException extends HttpException {
   constructor(message?: string | Record<string, unknown>) {
@@ -158,9 +284,72 @@ export class TooManyRequestsException extends HttpException {
   }
 }
 
+/** 456 Unrecoverable Error. */
+export class UnrecoverableErrorException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.UNRECOVERABLE_ERROR, message);
+  }
+}
+
 /** 500 Internal Server Error. */
 export class InternalServerErrorException extends HttpException {
   constructor(message?: string | Record<string, unknown>) {
     super(HttpStatus.INTERNAL_SERVER_ERROR, message);
+  }
+}
+
+/** 501 Not Implemented. */
+export class NotImplementedException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.NOT_IMPLEMENTED, message);
+  }
+}
+
+/** 502 Bad Gateway. */
+export class BadGatewayException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.BAD_GATEWAY, message);
+  }
+}
+
+/** 503 Service Unavailable. */
+export class ServiceUnavailableException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.SERVICE_UNAVAILABLE, message);
+  }
+}
+
+/** 504 Gateway Timeout. */
+export class GatewayTimeoutException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.GATEWAY_TIMEOUT, message);
+  }
+}
+
+/** 505 HTTP Version Not Supported. */
+export class HttpVersionNotSupportedException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.HTTP_VERSION_NOT_SUPPORTED, message);
+  }
+}
+
+/** 507 Insufficient Storage. */
+export class InsufficientStorageException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.INSUFFICIENT_STORAGE, message);
+  }
+}
+
+/** 508 Loop Detected. */
+export class LoopDetectedException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.LOOP_DETECTED, message);
+  }
+}
+
+/** 511 Network Authentication Required. */
+export class NetworkAuthenticationRequiredException extends HttpException {
+  constructor(message?: string | Record<string, unknown>) {
+    super(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED, message);
   }
 }

@@ -66,8 +66,10 @@
 - [2026-09-14] F01 `public-api`: design.md criado; spec refinada (REQ-005, REQ-066, REQ-070) e Serverless v3 incluído (REQ-003, REQ-094); JSON Schema draft-07 do Zod validado para a config do plugin.
 - [2026-09-14] Tasks criadas: F01a `public-api-core` (8) e F01b `public-api-surface` (5); F00 `project-setup` especificada (Medium). pnpm 12.4.1 detectado e fixado na spec.
 - [2026-09-14] Fluxo PO/DEV/QA configurado: agentes `po`, `dev` e `qa` criados em `.claude/agents/`, CONVENTIONS.md atualizado e subtasks por persona adicionadas às tasks de F00, F01a e F01b.
+- [2026-09-14] F00 `project-setup` complete. Gate: 5/5 pass (install, check, lint:ci, test, build) + commit-msg hook validado. QA PASS (16/16 AC), PO ACCEPTED. SPEC_DEVIATION: 3 aceitas (normalização oxfmt; `pnpm-workspace.yaml` e `.prettierignore` extras; aceite do commit-msg via hook direto). Commit: `chore: setup project` (commit inicial).
 
 ### Decisions
 - [2026-09-14] v1 somente HTTP; multi-protocolo é visão futura com notas de viabilidade.
+- [2026-09-14] Q1: classes aninhadas tipadas como instância via `v.instance(Cls)`; `Cls.encode` tipado como `output | input` para aceitar linhas cruas.
 
 ---

@@ -216,8 +216,9 @@ export class HttpException extends Error {
   readonly status: number;
   getResponse(): string | Record<string, unknown>;
 }
-// BadRequestException, UnauthorizedException, ForbiddenException, NotFoundException, ConflictException,
-// UnprocessableEntityException, TooManyRequestsException, InternalServerErrorException
+// Uma subclasse por status 4xx/5xx do HttpStatus (35 no total), ex.: BadRequestException, UnauthorizedException,
+// PaymentRequiredException, ForbiddenException, NotFoundException, ConflictException, UnprocessableEntityException,
+// TooManyRequestsException, InternalServerErrorException, BadGatewayException, ServiceUnavailableException...
 //   constructor(message?: string | Record<string, unknown>)
 
 export interface UploadedFile extends File {

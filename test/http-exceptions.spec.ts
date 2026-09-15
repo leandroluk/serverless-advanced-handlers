@@ -1,14 +1,41 @@
 import {describe, expect, expectTypeOf, test} from 'vitest';
 import {
+  BadGatewayException,
   BadRequestException,
   ConflictException,
+  ExpectationFailedException,
+  FailedDependencyException,
   ForbiddenException,
+  GatewayTimeoutException,
+  GoneException,
   HttpException,
+  HttpVersionNotSupportedException,
+  ImATeapotException,
+  InsufficientStorageException,
   InternalServerErrorException,
+  LengthRequiredException,
+  LockedException,
+  LoopDetectedException,
+  MethodNotAllowedException,
+  MisdirectedException,
+  NetworkAuthenticationRequiredException,
+  NotAcceptableException,
   NotFoundException,
+  NotImplementedException,
+  PayloadTooLargeException,
+  PaymentRequiredException,
+  PreconditionFailedException,
+  PreconditionRequiredException,
+  ProxyAuthenticationRequiredException,
+  RequestedRangeNotSatisfiableException,
+  RequestTimeoutException,
+  ServiceUnavailableException,
   TooManyRequestsException,
   UnauthorizedException,
   UnprocessableEntityException,
+  UnrecoverableErrorException,
+  UnsupportedMediaTypeException,
+  UriTooLongException,
 } from '#/http/exceptions';
 import * as httpBarrel from '#/http/index';
 import {HttpResult} from '#/http/result';
@@ -17,67 +44,84 @@ import * as root from '#/index';
 
 type ExceptionCtor = new (message?: string | Record<string, unknown>) => HttpException;
 
-const cases: ReadonlyArray<{ctor: ExceptionCtor; name: string; status: number; phrase: string}> = [
-  {ctor: BadRequestException, name: 'BadRequestException', status: 400, phrase: 'Bad Request'},
-  {ctor: UnauthorizedException, name: 'UnauthorizedException', status: 401, phrase: 'Unauthorized'},
-  {ctor: ForbiddenException, name: 'ForbiddenException', status: 403, phrase: 'Forbidden'},
-  {ctor: NotFoundException, name: 'NotFoundException', status: 404, phrase: 'Not Found'},
-  {ctor: ConflictException, name: 'ConflictException', status: 409, phrase: 'Conflict'},
-  {
-    ctor: UnprocessableEntityException,
-    name: 'UnprocessableEntityException',
-    status: 422,
-    phrase: 'Unprocessable Entity',
-  },
-  {ctor: TooManyRequestsException, name: 'TooManyRequestsException', status: 429, phrase: 'Too Many Requests'},
-  {
-    ctor: InternalServerErrorException,
-    name: 'InternalServerErrorException',
-    status: 500,
-    phrase: 'Internal Server Error',
-  },
-];
+const cases: Readonly<Array<[number, ExceptionCtor, string, string]>> = [
+  [400, BadRequestException, 'BadRequestException', 'Bad Request'],
+  [401, UnauthorizedException, 'UnauthorizedException', 'Unauthorized'],
+  [402, PaymentRequiredException, 'PaymentRequiredException', 'Payment Required'],
+  [403, ForbiddenException, 'ForbiddenException', 'Forbidden'],
+  [404, NotFoundException, 'NotFoundException', 'Not Found'],
+  [405, MethodNotAllowedException, 'MethodNotAllowedException', 'Method Not Allowed'],
+  [406, NotAcceptableException, 'NotAcceptableException', 'Not Acceptable'],
+  [407, ProxyAuthenticationRequiredException, 'ProxyAuthenticationRequiredException', 'Proxy Authentication Required'],
+  [408, RequestTimeoutException, 'RequestTimeoutException', 'Request Timeout'],
+  [409, ConflictException, 'ConflictException', 'Conflict'],
+  [410, GoneException, 'GoneException', 'Gone'],
+  [411, LengthRequiredException, 'LengthRequiredException', 'Length Required'],
+  [412, PreconditionFailedException, 'PreconditionFailedException', 'Precondition Failed'],
+  [413, PayloadTooLargeException, 'PayloadTooLargeException', 'Payload Too Large'],
+  [414, UriTooLongException, 'UriTooLongException', 'URI Too Long'],
+  [415, UnsupportedMediaTypeException, 'UnsupportedMediaTypeException', 'Unsupported Media Type'],
+  [416, RequestedRangeNotSatisfiableException, 'RequestedRangeNotSatisfiableException', 'Range Not Satisfiable'],
+  [417, ExpectationFailedException, 'ExpectationFailedException', 'Expectation Failed'],
+  [418, ImATeapotException, 'ImATeapotException', "I'm a Teapot"],
+  [421, MisdirectedException, 'MisdirectedException', 'Misdirected Request'],
+  [422, UnprocessableEntityException, 'UnprocessableEntityException', 'Unprocessable Entity'],
+  [423, LockedException, 'LockedException', 'Locked'],
+  [424, FailedDependencyException, 'FailedDependencyException', 'Failed Dependency'],
+  [428, PreconditionRequiredException, 'PreconditionRequiredException', 'Precondition Required'],
+  [429, TooManyRequestsException, 'TooManyRequestsException', 'Too Many Requests'],
+  [456, UnrecoverableErrorException, 'UnrecoverableErrorException', 'Unrecoverable Error'],
+  [500, InternalServerErrorException, 'InternalServerErrorException', 'Internal Server Error'],
+  [501, NotImplementedException, 'NotImplementedException', 'Not Implemented'],
+  [502, BadGatewayException, 'BadGatewayException', 'Bad Gateway'],
+  [503, ServiceUnavailableException, 'ServiceUnavailableException', 'Service Unavailable'],
+  [504, GatewayTimeoutException, 'GatewayTimeoutException', 'Gateway Timeout'],
+  [505, HttpVersionNotSupportedException, 'HttpVersionNotSupportedException', 'HTTP Version Not Supported'],
+  [507, InsufficientStorageException, 'InsufficientStorageException', 'Insufficient Storage'],
+  [508, LoopDetectedException, 'LoopDetectedException', 'Loop Detected'],
+  [511, NetworkAuthenticationRequiredException, 'NetworkAuthenticationRequiredException', 'Network Authentication Required'],
+]; // prettier-ignore
 
 describe('HTTP exception subclasses', () => {
-  describe.each(cases)('$name', ({ctor: Exception, name, status, phrase}) => {
+  describe.each(cases)('$name', (status, ctor, name, phrase) => {
     test(`has status ${status} and the concrete class name`, () => {
-      const error = new Exception();
+      const error = new ctor();
       expect(error.status).toBe(status);
       expect(error.name).toBe(name);
     });
 
     test('defaults getResponse() and message to the reason phrase', () => {
-      const error = new Exception();
+      const error = new ctor();
       expect(error.getResponse()).toBe(phrase);
       expect(error.message).toBe(phrase);
     });
 
     test('returns a custom string response and uses it as message', () => {
-      const error = new Exception('custom message');
+      const error = new ctor('custom message');
       expect(error.getResponse()).toBe('custom message');
       expect(error.message).toBe('custom message');
     });
 
     test('returns a custom object response by reference and takes message from it', () => {
       const response = {message: 'object message', code: 'E_CUSTOM'};
-      const error = new Exception(response);
+      const error = new ctor(response);
       expect(error.getResponse()).toBe(response);
       expect(error.message).toBe('object message');
     });
 
     test('falls back to the reason phrase when the object response has no string message', () => {
       const response = {code: 'E_CUSTOM', message: ['a', 'b']};
-      const error = new Exception(response);
+      const error = new ctor(response);
       expect(error.getResponse()).toBe(response);
       expect(error.message).toBe(phrase);
     });
 
     test('is instanceof the subclass, HttpException and Error, and keeps the stack', () => {
-      const error = new Exception();
-      expect(error).toBeInstanceOf(Exception);
+      const error = new ctor();
+      expect(error).toBeInstanceOf(ctor);
       expect(error).toBeInstanceOf(HttpException);
       expect(error).toBeInstanceOf(Error);
-      expect(Object.getPrototypeOf(error)).toBe(Exception.prototype);
+      expect(Object.getPrototypeOf(error)).toBe(ctor.prototype);
       expect(error.stack).toEqual(expect.any(String));
       expect(error.stack).toContain(`${name}: ${phrase}`);
       expect(error.stack).toContain('http-exceptions.spec.ts');
@@ -85,10 +129,10 @@ describe('HTTP exception subclasses', () => {
 
     test('is caught as HttpException when thrown', () => {
       const run = (): never => {
-        throw new Exception('thrown');
+        throw new ctor('thrown');
       };
       expect(run).toThrow(HttpException);
-      expect(run).toThrow(Exception);
+      expect(run).toThrow(ctor);
       expect(run).toThrow('thrown');
     });
   });
@@ -140,15 +184,15 @@ describe('HttpException', () => {
   });
 
   test('user subclasses get their own name and instanceof chain', () => {
-    class PaymentRequiredException extends HttpException {
+    class CustomPaymentException extends HttpException {
       constructor() {
         super(HttpStatus.PAYMENT_REQUIRED);
       }
     }
     class CardDeclinedException extends NotFoundException {}
 
-    const payment = new PaymentRequiredException();
-    expect(payment.name).toBe('PaymentRequiredException');
+    const payment = new CustomPaymentException();
+    expect(payment.name).toBe('CustomPaymentException');
     expect(payment.getResponse()).toBe('Payment Required');
     expect(payment).toBeInstanceOf(HttpException);
 
@@ -256,14 +300,41 @@ describe('barrels', () => {
     const exported = {
       HttpResult,
       HttpException,
+      BadGatewayException,
       BadRequestException,
-      UnauthorizedException,
-      ForbiddenException,
-      NotFoundException,
       ConflictException,
-      UnprocessableEntityException,
-      TooManyRequestsException,
+      ExpectationFailedException,
+      FailedDependencyException,
+      ForbiddenException,
+      GatewayTimeoutException,
+      GoneException,
+      HttpVersionNotSupportedException,
+      ImATeapotException,
+      InsufficientStorageException,
       InternalServerErrorException,
+      LengthRequiredException,
+      LockedException,
+      LoopDetectedException,
+      MethodNotAllowedException,
+      MisdirectedException,
+      NetworkAuthenticationRequiredException,
+      NotAcceptableException,
+      NotFoundException,
+      NotImplementedException,
+      PayloadTooLargeException,
+      PaymentRequiredException,
+      PreconditionFailedException,
+      PreconditionRequiredException,
+      ProxyAuthenticationRequiredException,
+      RequestedRangeNotSatisfiableException,
+      RequestTimeoutException,
+      ServiceUnavailableException,
+      TooManyRequestsException,
+      UnauthorizedException,
+      UnprocessableEntityException,
+      UnrecoverableErrorException,
+      UnsupportedMediaTypeException,
+      UriTooLongException,
     };
     for (const [key, value] of Object.entries(exported)) {
       expect((httpBarrel as Record<string, unknown>)[key], `http barrel ${key}`).toBe(value);
