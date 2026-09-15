@@ -191,8 +191,12 @@
   - além disso, `HttpResult` preserva body e opções.
 - **Gate**: `pnpm vitest run test/http-exceptions.spec.ts`
 - **Subtasks**:
-  - [ ] PO — critérios de aceite
-  - [ ] DEV — implementação + gate
-  - [ ] QA — verificação independente
-  - [ ] PO — aceite
-  - [ ] Commit
+  - [x] PO — critérios de aceite (10 ACs; mensagem padrão com paridade NestJS e reason phrases locais, sem `node:http`)
+  - [x] DEV — implementação + gate (69/69)
+  - [x] QA — verificação independente (PASS, sem defeitos)
+  - [x] PO — aceite (ACCEPTED)
+  - [x] Commit
+- **Observações:**
+  - 413 e 422 usam as frases clássicas do NestJS/Node ('Payload Too Large', 'Unprocessable Entity'), não as da RFC 9110.
+  - `HttpResult` guarda `headers`/`cookies` sem cópia defensiva.
+  - O `name` das exceções depende de `keepNames` no bundle minificado (F10).

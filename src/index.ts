@@ -8,5 +8,17 @@ export type {
 export * from '#/decorators/dual';
 export * from '#/di/providers';
 export * from '#/di/tokens';
-export {HttpStatus} from '#/http';
+export {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  HttpException,
+  HttpResult,
+  HttpStatus,
+  InternalServerErrorException,
+  NotFoundException,
+  TooManyRequestsException,
+  UnauthorizedException,
+  UnprocessableEntityException,
+} from '#/http';
 export type {HttpMethod, HttpRequest, HttpResponseState, LambdaContext, UploadedFile} from '#/http';

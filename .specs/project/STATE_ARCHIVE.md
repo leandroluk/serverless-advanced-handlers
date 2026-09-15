@@ -61,6 +61,7 @@
 ### Progress
 - [2026-09-14] F01 `public-api`: spec.md criado (Specify).
 - [2026-09-14] F01 `public-api`: discuss mode concluído (Q1–Q4 em context.md); `v.instance` e tipagem de `encode` validados em protótipo.
+- [2026-09-14] F01 `public-api`: spec aprovada; REQ-101/104 ajustadas (overrides em objeto) e tipagem mutuamente excludente validada em protótipo.
 
 ### Decisions
 - [2026-09-14] v1 somente HTTP; multi-protocolo é visão futura com notas de viabilidade.
