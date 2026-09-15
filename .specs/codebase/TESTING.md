@@ -20,5 +20,11 @@ Vitest, com configuração base espelhada de `metha/pkgs/config-vitest/src/base.
 | **Plugin**           | Hooks e registro de funções                                          | Matriz Serverless v3 × osls 3.x × osls 4.x em modo `package` sobre fixture; inspeção de `service.functions`     |
 | **Uploads S3**       | Presign, `uploadToken`, `S3UploadedFile`                             | S3 mockado (sem AWS real) + testes de policy                                                 |
 
+## Projetos Vitest
+- **`unit`:** specs e testes de tipo (`*.test-d.ts`); não depende de `dist/`.
+- **`dist`:** specs que consomem `dist/`, como `entrypoints` e `boundaries`. O build roda uma vez via `globalSetup`.
+
+> **Atenção:** o typecheck processa todos os `**/*.test-d.ts` do programa. Um teste de tipo quebrado em qualquer arquivo derruba o exit code de `vitest run --typecheck <outro-arquivo>`. O `master` precisa ficar sempre verde, e cada worktree valida contra a própria base (observação do QA na public-api-core T-001).
+
 ## Gate
 Uma task só é concluída com `pnpm check` e `pnpm test` passando e com as specs/STATE atualizadas no mesmo commit.

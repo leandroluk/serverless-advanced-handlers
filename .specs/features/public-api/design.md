@@ -51,6 +51,7 @@ flowchart TB
 **Garantias automatizadas:**
 - `oxlint` com `no-restricted-imports` em `src/{validation,class,decorators,http,pipeline,runtime}`.
 - Teste que bundla `dist/index.mjs` e `dist/runtime.mjs` com esbuild e falha se o metafile contiver `ts-morph`, `typescript`, `esbuild` ou `@swc`.
+- `tsdown.config.ts` com `deps.neverBundle` para esses mesmos pacotes. Sem isso, o tsdown copia as devDependencies importadas para dentro de `dist/`, e o teste de fronteira dá falso negativo (descoberto na public-api-core T-001).
 
 ### Modelo de execução
 - **Decorators e marcadores de tipo não têm comportamento em runtime.** Os decorators são funções no-op com assinatura dupla (legado e TC39); toda a semântica é extraída pelo compilador. Isso refina a REQ-005: a detecção do modo em runtime deixa de ser necessária.

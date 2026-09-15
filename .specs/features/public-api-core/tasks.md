@@ -31,11 +31,17 @@
   - Um import proposital de `ts-morph` em `src/http/` faz `pnpm lint` e `test/boundaries.spec.ts` falharem (verificado e revertido).
 - **Gate**: `pnpm build && pnpm vitest run test/entrypoints.spec.ts test/boundaries.spec.ts && pnpm lint`
 - **Subtasks**:
-  - [ ] PO — critérios de aceite
-  - [ ] DEV — implementação + gate
-  - [ ] QA — verificação independente
-  - [ ] PO — aceite
-  - [ ] Commit
+  - [x] PO — critérios de aceite (11 ACs)
+  - [x] DEV — implementação + gate (7/7; retomada após limite de sessão, sonda não revertida corrigida)
+  - [x] QA — verificação independente (PASS; D-1 menor, D-2 observação herdada)
+  - [x] DEV — correção D-1 (`src/index.ts` incluído na regra `no-restricted-imports`)
+  - [x] PO — aceite (ACCEPTED)
+  - [x] Commit
+- **SPEC_DEVIATION (aceita):**
+  - `tsdown.config.ts`, fora do "Where", ganhou `deps.neverBundle` para `ts-morph`, `typescript`, `esbuild` e `@swc/*`.
+  - Sem isso, o tsdown copia para dentro de `dist/` as devDependencies importadas, e o teste de fronteira dá falso negativo.
+  - Formalizado no design ("Garantias automatizadas").
+- **Mudança estrutural:** `vitest.config.ts` passou a ter os projetos `unit` e `dist`. O projeto `dist` faz o build uma vez via `globalSetup`, e os testes de tipo continuam no `unit`.
 
 ## T-002: Primitivas de decorators duais
 - **REQ**: REQ-005 (base de REQ-004 e REQ-007)

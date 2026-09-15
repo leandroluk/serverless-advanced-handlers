@@ -62,6 +62,7 @@
 - [2026-09-14] F01 `public-api`: spec.md criado (Specify).
 - [2026-09-14] F01 `public-api`: discuss mode concluído (Q1–Q4 em context.md); `v.instance` e tipagem de `encode` validados em protótipo.
 - [2026-09-14] F01 `public-api`: spec aprovada; REQ-101/104 ajustadas (overrides em objeto) e tipagem mutuamente excludente validada em protótipo.
+- [2026-09-14] F01 `public-api`: modos de decorators (REQ-004..008) e alvo osls (REQ-003, 090, 094) incorporados; INSIGHT §6.6 criado; protótipo validou decorators duais, TS1206 no TC39, marcadores de tipo e ausência de metadata no esbuild.
 
 ### Decisions
 - [2026-09-14] v1 somente HTTP; multi-protocolo é visão futura com notas de viabilidade.

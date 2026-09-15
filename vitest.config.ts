@@ -1,6 +1,9 @@
 /// <reference types="vitest" />
 import {resolve} from 'node:path';
-import {defineConfig} from 'vitest/config';
+import {configDefaults, defineConfig} from 'vitest/config';
+
+/** Specs that exercise the built package; the `dist` project builds it once per run (`test/setup/build-dist.ts`). */
+const distSpecs = ['test/entrypoints.spec.ts', 'test/boundaries.spec.ts'];
 
 export default defineConfig({
   resolve: {
@@ -10,12 +13,6 @@ export default defineConfig({
     globals: true,
     passWithNoTests: true,
     watch: false,
-    include: ['{src,test}/**/*.{e2e-test,e2e-spec,test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    typecheck: {
-      enabled: true,
-      include: ['**/*.test-d.ts'],
-      tsconfig: './tsconfig.json',
-    },
     coverage: {
       provider: 'v8',
       reportsDirectory: './.coverage',
@@ -24,5 +21,28 @@ export default defineConfig({
     },
     testTimeout: 60000,
     hookTimeout: 30000,
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          include: ['{src,test}/**/*.{e2e-test,e2e-spec,test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+          exclude: [...configDefaults.exclude, ...distSpecs],
+          typecheck: {
+            enabled: true,
+            include: ['**/*.test-d.ts'],
+            tsconfig: './tsconfig.json',
+          },
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'dist',
+          include: distSpecs,
+          globalSetup: ['test/setup/build-dist.ts'],
+        },
+      },
+    ],
   },
 });

@@ -46,6 +46,27 @@
       "rules": {
         "typescript/no-namespace": "off"
       }
+    },
+    {
+      "files": ["src/index.ts", "src/{validation,class,decorators,di,http,pipeline,runtime}/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {"name": "ts-morph", "message": "Build-time only (REQ-002): not allowed in root or /runtime code."},
+              {"name": "typescript", "message": "Build-time only (REQ-002): not allowed in root or /runtime code."},
+              {"name": "esbuild", "message": "Build-time only (REQ-002): not allowed in root or /runtime code."}
+            ],
+            "patterns": [
+              {
+                "group": ["ts-morph/**", "typescript/**", "esbuild/**", "@swc/**"],
+                "message": "Build-time only (REQ-002): not allowed in root or /runtime code."
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }
