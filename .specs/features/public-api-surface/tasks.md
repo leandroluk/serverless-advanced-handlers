@@ -67,11 +67,14 @@
 - **Done when**: o typecheck passa em classe e método nos modos B e C, e opções com tipo inválido falham.
 - **Gate**: `pnpm vitest run --typecheck test/types/lambda-config.test-d.ts`
 - **Subtasks**:
-  - [ ] PO — critérios de aceite
-  - [ ] DEV — implementação + gate
-  - [ ] QA — verificação independente
-  - [ ] PO — aceite
-  - [ ] Commit
+  - [x] PO — critérios de aceite (decisões: `IamResource = string | Record<string, unknown>`; modo A fora do escopo)
+  - [x] DEV — implementação + gate (typecheck 6/6; spec de modos `test/lambda-config-modes.spec.ts` 7/7 com fixture `test/types/mode-c-lambda`)
+  - [x] QA — verificação independente (D-1: parâmetro `_options` vazava no `.d.ts`; corrigido com overload público + implementação sem parâmetro)
+  - [x] PO — aceite (ACCEPTED)
+  - [x] Commit
+- **Notas de execução:**
+  - Integrado no barrel raiz via `export * from '#/decorators/lambda'` (`LambdaConfig`, `LambdaConfigOptions`, `IamStatement`, `IamResource`).
+  - Suíte completa: 437/437.
 
 ## T-004: Decorators de pipeline e `Reflector`
 - **REQ**: REQ-060 (decorators), REQ-063, REQ-066
