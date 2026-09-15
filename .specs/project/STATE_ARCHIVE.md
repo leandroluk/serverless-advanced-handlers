@@ -82,5 +82,6 @@
 - [2026-09-15] public-api-surface T-001 complete. Gate: 17/17 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(pipeline)`. [REQ-060, REQ-062, REQ-065]
 - [2026-09-14] public-api-core T-006 complete. Gate: 23/23 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(decorators)` DI. [REQ-004, REQ-005, REQ-007, REQ-030, REQ-031, REQ-033]
 - [2026-09-14] public-api-core T-005 complete. Gate: 10/10 pass + `pnpm check`. QA PASS (D-1 ratificado, D-2 corrigido pelo DEV), PO ACCEPTED. SPEC_DEVIATION: `AnyAdvancedClass` (design decisão 15). Commit: `feat(class)`. [REQ-020..026]
+- [2026-09-14] public-api-core T-002 complete. Gate: 10/10 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: forma TC39 de `DualMethodDecorator` genérica em `This` (design decisão 16). Commit: `feat(decorators)`. [REQ-004, REQ-005, REQ-007]
 
 ---

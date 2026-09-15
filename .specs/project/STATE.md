@@ -34,8 +34,7 @@ Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica
 - [x] Quick fix: tornar `InjectionToken<T>` nominal (ex.: campo privado) — hoje qualquer `{ description: string }` satisfaz `Token` (achado do DEV na public-api-core T-006)
 - [x] Quick task: exceções HTTP 4xx/5xx restantes (autoria do usuário) — QA → PO → commit `feat(http)`
 - [ ] Especificar F02 `poc-risks`
-- [ ] Construir o grafo quando houver código (`graph-spec-design . --code-only`) ou configurar chave de LLM para indexar as specs
-- [ ] Criar docs de codebase STRUCTURE e INTEGRATIONS quando houver código
+- [ ] Instalar o hook de pós-commit do graphify (`.git/hooks/post-commit`) — bloqueado pelo classificador de auto mode nesta sessão; até lá, rodar `graphify update . --no-viz --code-only` manualmente após cada commit relevante
 
 ## Active Blockers
 - none
@@ -63,6 +62,7 @@ Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica
 - [2026-09-14] Q2: rota com corpo sem schema `Class()` gera erro de build por padrão; `responses.missingSchema: warn` rebaixa para warning.
 
 ## Recent Progress (Last 10)
+- [2026-09-15] Grafo do código construído (`graphify . --code-only`, sem chave de LLM): 930 nós, 1890 arestas, 43 comunidades, sem ciclos de import. Criados `STRUCTURE.md` e `INTEGRATIONS.md`; `ARCHITECTURE.md`/`CONCERNS.md` anotados com o estado atual do código. Hook de pós-commit não instalado (bloqueado pelo auto mode).
 - [2026-09-15] Quick fix: `InjectionToken<T>` tornado nominal (`declare private readonly __type: T`, antes público e opcional). Gate: typecheck 23/23 + suíte completa 480/480 + `pnpm check`/`lint:ci`/`build`. QA PASS (reproduziu rejeição TS2741/TS2322 e provou que os `@ts-expect-error` não eram mortos via revert temporário), PO ACCEPTED. Snapshot da API pública (T-005) atualizado para refletir a nova forma. Commit: `fix(di)` (este commit).
 - [2026-09-15] public-api-surface T-005 complete. Gate: 4/4 + suíte completa 479/479 + `pnpm check`/`lint:ci`/`build`. QA PASS (reproduziu adversarial e determinismo independentemente), PO ACCEPTED. SPEC_DEVIATION: snapshot resolve chunks internos do tsdown e inlina 5 tipos de DI em vez de reexport vazio. **F01b `public-api-surface` concluída (5/5).** Commit: `test(public-api)` (este commit). [REQ-001]
 - [2026-09-15] public-api-surface T-004 complete. Gate: spec 23/23 + typecheck 15/15 + `pnpm check`/`lint:ci`/`test` (475/475)/`build`. QA PASS, PO ACCEPTED. SPEC_DEVIATION: none. `/runtime` passa a exportar `defineReflectMetadata`. Commit: `feat(decorators)` pipeline/Reflector (este commit). [REQ-060, REQ-063, REQ-066]
@@ -72,7 +72,7 @@ Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica
 - [2026-09-15] public-api-core T-007 complete. Gate: 18/18 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. **F01a `public-api-core` concluída (8/8).** Commit: `feat(decorators)` HTTP (este commit). [REQ-007, REQ-040..043, REQ-045, REQ-050]
 - [2026-09-15] public-api-core T-001 complete. Gate: 7/7 pass + `pnpm check`/`lint:ci`/`test`. QA PASS (D-1 corrigido), PO ACCEPTED. SPEC_DEVIATION: `deps.neverBundle` no `tsdown.config.ts` (evita falso negativo do teste de fronteira). Commit: `test(boundaries)` (este commit). [REQ-001, REQ-002]
 - [2026-09-14] public-api-core T-008 complete. Gate: 69/69 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(http)` exceptions (este commit). [REQ-049, REQ-051]
-- [2026-09-14] public-api-core T-002 complete. Gate: 10/10 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: forma TC39 de `DualMethodDecorator` genérica em `This` (design decisão 16). Commit: `feat(decorators)` (este commit). [REQ-004, REQ-005, REQ-007]
+
 ## Lessons Learned (Last 5)
 - [2026-09-14] Agentes definidos em `.claude/agents/` durante a sessão só ficam disponíveis após reiniciar; até lá, use `general-purpose` com `model` e as instruções do arquivo (o esforço não pode ser fixado). QA de tipos precisa de temporários dentro do escopo do tsconfig (`test/__qa__/`). pnpm 12 exige `allowBuilds` para pacotes com build script (lefthook, esbuild); worktrees instaladas com `--ignore-scripts` escondem isso, então é preciso validar `pnpm install` no master a cada integração.
 - [2026-09-14] esbuild ignora `emitDecoratorMetadata` (não emite `design:paramtypes`); bibliotecas dependentes de metadata exigem transform com SWC ou tsc antes do bundle.
@@ -86,5 +86,6 @@ Execução paralela via git worktrees em `scratchpad/wt/`; o orquestrador aplica
 - Helper de cliente `uploadForm()` para o fluxo S3.
 
 ## Degraded Mode
-- graph-spec-design instalado, mas o grafo não foi gerado: não há código ainda e a indexação de `.md` exige chave de LLM (`ANTHROPIC_API_KEY` ou similar).
-- Contexto carregado por leitura direta: STATE.md + spec da feature ativa por sessão.
+- Grafo construído em 2026-09-15 com `graphify . --code-only` (930 nós, 1890 arestas, 43 comunidades) — sem chave de LLM (`ANTHROPIC_API_KEY`/`GEMINI_API_KEY`/etc.), então **não indexa `.specs/*.md`**: `graphify query "o que implementa REQ-001?"` não funciona; usar leitura direta das specs para perguntas de requisito.
+- Hook de pós-commit não instalado (bloqueado pelo auto mode); atualizar manualmente com `graphify update . --no-viz --code-only` após commits que mudem `src/`.
+- Relatório: [`.specs/graph/GRAPH_REPORT.md`](../graph/GRAPH_REPORT.md). Docs de codebase `STRUCTURE.md`/`INTEGRATIONS.md` criados a partir dele.

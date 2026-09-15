@@ -1,6 +1,6 @@
 # Concerns (planejados — greenfield)
 
-Semeado a partir da tabela de riscos da [INSIGHT.md §10](../../INSIGHT.md).
+Semeado a partir da tabela de riscos da [INSIGHT.md §10](../../INSIGHT.md). A maioria destes riscos ainda não se materializou em código: F00/F01a/F01b entregaram só a superfície declarativa (sem compilador, bundler ou I/O). Um risco já concretizado e mitigado: "Nomes de classes no bundle" — `HttpStatus`/`HttpException` são god nodes (74 e 42 arestas no grafo, ver [STRUCTURE.md](STRUCTURE.md)), tornando `keepNames` na F10 ainda mais crítico do que o previsto originalmente (usados por 43 subclasses de exceção + todos os decorators HTTP/OpenAPI).
 
 | Componente / Tema            | Risco                                                                                   | Mitigação planejada                                   |
 | :--------------------------- | :-------------------------------------------------------------------------------------- | :---------------------------------------------------- |
