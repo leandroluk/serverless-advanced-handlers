@@ -176,11 +176,12 @@
   - Decorators de parâmetro rejeitam argumentos que não sejam `AdvancedClass`.
 - **Gate**: `pnpm vitest run --typecheck test/types/http-decorators.test-d.ts`
 - **Subtasks**:
-  - [ ] PO — critérios de aceite
-  - [ ] DEV — implementação + gate
-  - [ ] QA — verificação independente
-  - [ ] PO — aceite
-  - [ ] Commit
+  - [x] PO — critérios de aceite (11 ACs; exemplo sem `@Openapi*`; decisão de identificador único para `HttpRequest`/`LambdaContext`)
+  - [x] DEV — implementação + gate (18/18; recomeçada após limite de sessão)
+  - [x] QA — verificação independente (PASS, sem defeitos)
+  - [x] PO — aceite (ACCEPTED)
+  - [x] Commit
+- **Decisão de implementação:** as funções `HttpRequest()` e `LambdaContext()` ficam em `src/http/types.ts`, junto da interface e do alias de mesmo nome (merge valor+tipo). Assim a raiz expõe um único identificador que serve como decorator e como tipo, e a augmentation via `declare module` continua funcionando.
 
 ## T-008: `HttpResult` e exceções HTTP
 - **REQ**: REQ-049, REQ-051

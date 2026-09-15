@@ -11,4 +11,5 @@ export {
 } from './exceptions';
 export {HttpResult} from './result';
 export {HttpStatus} from './status';
-export type {HttpMethod, HttpRequest, HttpResponseState, LambdaContext, UploadedFile} from './types';
+export {HttpRequest, LambdaContext} from './types';
+export type {HttpMethod, HttpResponseState, UploadedFile} from './types';
