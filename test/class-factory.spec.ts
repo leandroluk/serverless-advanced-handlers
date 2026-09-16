@@ -1,9 +1,10 @@
-// Runtime de `Class()` e `isServerlessAdvancedHandlersClass()` (REQ-020..REQ-025).
+// Runtime de `Class()`, `isServerlessAdvancedHandlersClass()` e `instance()` (REQ-020..REQ-026).
 import {describe, expect, it} from 'vitest';
 import * as z from 'zod';
 
-import {Class, isServerlessAdvancedHandlersClass} from '#/class/class-factory';
+import {Class, instance, isServerlessAdvancedHandlersClass} from '#/class/class-factory';
 import * as root from '#/index';
+import * as vModule from '#/validation/v';
 import {v} from '#/validation/v';
 
 const userSchema = v.object({id: v.string(), name: v.string(), createdAt: v.datetime()});
@@ -280,9 +281,152 @@ describe('Class(OutraClasse) reaproveita o schema da fonte (REQ-020)', () => {
   });
 });
 
+describe('instance() — campo aninhado tipado como instância (REQ-026)', () => {
+  class OrderEntity extends Class(v.object({code: v.string(), owner: v.instance(UserEntity)})) {
+    get label(): string {
+      return `${this.code}: ${this.owner.displayName}`;
+    }
+  }
+
+  const rawOrder = {code: 'A-1', owner: raw};
+
+  it('v.instance e o import direto são a mesma função, não duas implementações', () => {
+    expect(v.instance).toBe(instance);
+    expect(vModule.instance).toBe(instance);
+    expect(typeof v.instance).toBe('function');
+  });
+
+  it('devolve o próprio codec memoizado da classe, sem construir um novo', () => {
+    expect(instance(UserEntity)).toBe(UserEntity.schema);
+    expect(instance(UserEntity)).toBe(instance(UserEntity));
+    expect(instance(AdminEntity)).not.toBe(instance(UserEntity));
+  });
+
+  it('expõe o codec da classe aninhada no shape do schema composto', () => {
+    expect(OrderEntity.shape.owner).toBe(UserEntity.schema);
+  });
+
+  it('parse devolve instância real da classe aninhada, com campos decodificados', () => {
+    const order = OrderEntity.parse(rawOrder);
+
+    expect(order).toBeInstanceOf(OrderEntity);
+    expect(order.owner).toBeInstanceOf(UserEntity);
+    expect(order.owner).not.toEqual({...raw});
+    expect(order.owner.createdAt).toBeInstanceOf(Date);
+    expect(order.owner.displayName).toBe('John <1>');
+    expect(order.label).toBe('A-1: John <1>');
+  });
+
+  it('cada parse constrói uma instância aninhada nova', () => {
+    expect(OrderEntity.parse(rawOrder).owner).not.toBe(OrderEntity.parse(rawOrder).owner);
+  });
+
+  it('respeita a subclasse referenciada, não a base da hierarquia', () => {
+    class AdminOrder extends Class(v.object({owner: v.instance(AdminEntity)})) {}
+
+    const admin = AdminOrder.parse({owner: raw}).owner;
+
+    expect(admin).toBeInstanceOf(AdminEntity);
+    expect(admin.isAdmin).toBe(true);
+    expect(OrderEntity.parse(rawOrder).owner).not.toBeInstanceOf(AdminEntity);
+  });
+
+  it('propaga a validação do schema aninhado', () => {
+    expect(() => OrderEntity.parse({code: 'A-1', owner: {...raw, id: 1}})).toThrow(z.ZodError);
+    expect(() => OrderEntity.parse({code: 'A-1', owner: null})).toThrow(z.ZodError);
+    expect(OrderEntity.safeParse({code: 'A-1', owner: {}}).success).toBe(false);
+  });
+
+  it('descarta chaves desconhecidas do objeto aninhado', () => {
+    const order = OrderEntity.parse({code: 'A-1', owner: {...raw, passwordHash: 'secret'}});
+
+    expect(order.owner).not.toHaveProperty('passwordHash');
+  });
+
+  it('encode serializa o aninhado pelos codecs da classe referenciada (REQ-023)', () => {
+    const order = OrderEntity.parse(rawOrder);
+    const encoded = OrderEntity.encode(order);
+
+    expect(encoded).toEqual(rawOrder);
+    expect(encoded.owner).toEqual(raw);
+    expect(encoded.owner.createdAt).toBe(raw.createdAt);
+    expect(encoded.owner).not.toBeInstanceOf(UserEntity);
+  });
+
+  it('encode aceita objeto plano no lugar da instância aninhada', () => {
+    const encoded = OrderEntity.encode({
+      code: 'A-1',
+      owner: {id: '1', name: 'John', createdAt: new Date(raw.createdAt)},
+    });
+
+    expect(encoded).toEqual(rawOrder);
+  });
+
+  it('encode remove chaves desconhecidas do aninhado', () => {
+    const order = OrderEntity.parse(rawOrder);
+
+    Object.assign(order.owner, {passwordHash: 'secret'});
+
+    expect(OrderEntity.encode(order)).toEqual(rawOrder);
+  });
+
+  it('compõe com os combinadores do Zod (array, optional, nullable)', () => {
+    class Team extends Class(
+      v.object({members: v.array(v.instance(UserEntity)), lead: v.instance(UserEntity).optional()})
+    ) {}
+
+    const team = Team.parse({members: [raw, {...raw, id: '2'}]});
+
+    expect(team.members).toHaveLength(2);
+    expect(team.members.every(member => member instanceof UserEntity)).toBe(true);
+    expect(team.lead).toBeUndefined();
+    expect(Team.parse({members: [], lead: raw}).lead).toBeInstanceOf(UserEntity);
+    expect(Team.encode(Team.parse({members: [raw]}))).toEqual({members: [raw]});
+  });
+
+  it('aninha em mais de um nível, ida e volta', () => {
+    class Invoice extends Class(v.object({total: v.number(), order: v.instance(OrderEntity)})) {}
+
+    const rawInvoice = {total: 10, order: rawOrder};
+    const invoice = Invoice.parse(rawInvoice);
+
+    expect(invoice).toBeInstanceOf(Invoice);
+    expect(invoice.order).toBeInstanceOf(OrderEntity);
+    expect(invoice.order.owner).toBeInstanceOf(UserEntity);
+    expect(invoice.order.label).toBe('A-1: John <1>');
+    expect(Invoice.encode(invoice)).toEqual(rawInvoice);
+  });
+
+  it('dois campos da mesma classe compartilham o codec, sem vazar instância', () => {
+    class Transfer extends Class(v.object({from: v.instance(UserEntity), to: v.instance(UserEntity)})) {}
+
+    const transfer = Transfer.parse({from: raw, to: {...raw, id: '2', name: 'Jane'}});
+
+    expect(Transfer.shape.from).toBe(Transfer.shape.to);
+    expect(transfer.from).toBeInstanceOf(UserEntity);
+    expect(transfer.to).toBeInstanceOf(UserEntity);
+    expect(transfer.from).not.toBe(transfer.to);
+    expect(transfer.to.displayName).toBe('Jane <2>');
+  });
+
+  it('aceita uma classe composta por Class(OutraClasse)', () => {
+    class Composed extends Class(UserEntity) {}
+    class Wrapper extends Class(v.object({owner: v.instance(Composed)})) {}
+
+    const owner = Wrapper.parse({owner: raw}).owner;
+
+    expect(owner).toBeInstanceOf(Composed);
+    expect(owner).not.toBeInstanceOf(UserEntity);
+  });
+});
+
 describe('superfície pública', () => {
   it('reexporta Class e isServerlessAdvancedHandlersClass na raiz', () => {
     expect(root.Class).toBe(Class);
     expect(root.isServerlessAdvancedHandlersClass).toBe(isServerlessAdvancedHandlersClass);
+  });
+
+  it('expõe instance em v, alcançável pela raiz (REQ-026)', () => {
+    expect(root.v.instance).toBe(instance);
   });
 });

@@ -57,3 +57,8 @@
   - `Order.encode(order)` serializa `order.owner` corretamente via os codecs de `User` (não perde os campos do aninhado).
   - `v.instance` e `instance` (import direto de `class-factory`) são a mesma função (não duas implementações divergentes).
 - **Gate**: `pnpm vitest run test/class-factory.spec.ts && pnpm vitest run --typecheck test/types/class-factory.test-d.ts`
+- **[x] Concluída.** Gate: 47/47 + 12/12 + `pnpm check`/`lint:ci`/`test` (681/681)/`build`. QA PASS (consumidor isolado via `pnpm link:` fora do monorepo, testes adversariais de compartilhamento de codec/aninhamento em 2 níveis/propagação de erro), PO ACCEPTED.
+- **SPEC_DEVIATION (aceita):** a nota de integração original (anterior à decisão 17 de F03) previa só `export {instance} from '#/class/class-factory'` em `v.ts` — isso não produz `v.instance()` porque `v` deixou de ser namespace sintetizado e virou `const` real. Fix: `instance` entra no objeto `extensions` (que compõe `v` via `Object.assign`), com o export nomeado mantido só por simetria (mesma função, não duplicação).
+- **Notas de execução:** `root.instance` (export solto na raiz) permanece `undefined` de propósito — nenhum AC pede isso, e adicionar mudaria `ROOT_EXPORTS`/snapshot de public-api-surface (API travada) sem necessidade.
+
+**F04 `class-factory` concluída (2/2).**

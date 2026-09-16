@@ -1,4 +1,4 @@
-// Tipagem da implementação real de `Class()` e `isServerlessAdvancedHandlersClass()` (REQ-020..REQ-025).
+// Tipagem da implementação real de `Class()`, `isServerlessAdvancedHandlersClass()` e `instance()` (REQ-020..REQ-026).
 //
 // `advanced-class.test-d.ts` cobre o contrato a partir dos aliases de `#/class/types` (declarações puras); aqui
 // as funções concretas de `#/class/class-factory` são exercitadas, para garantir que a implementação satisfaz o
@@ -6,8 +6,14 @@
 import {describe, expectTypeOf, it} from 'vitest';
 import * as z from 'zod';
 
-import {Class, isServerlessAdvancedHandlersClass} from '#/class/class-factory';
-import type {AdvancedClass, AdvancedClassGuard, AnyAdvancedClass, ClassFactory} from '#/class/types';
+import {Class, instance, isServerlessAdvancedHandlersClass} from '#/class/class-factory';
+import type {
+  AdvancedClass,
+  AdvancedClassGuard,
+  AnyAdvancedClass,
+  ClassFactory,
+  InstanceSchemaFactory,
+} from '#/class/types';
 import {v} from '#/validation/v';
 
 const userSchema = v.object({id: v.string(), name: v.string(), createdAt: v.datetime()});
@@ -28,6 +34,8 @@ class AdminEntity extends UserEntity {
 class CreateUserBody extends Class(UserEntity.omit({id: true, createdAt: true})) {}
 
 class CreateUserResponse extends Class(UserEntity) {}
+
+class OrderEntity extends Class(v.object({code: v.string(), owner: v.instance(UserEntity)})) {}
 
 declare class PlainClass {
   name: string;
@@ -108,6 +116,59 @@ describe('Class', () => {
     new UserEntity({id: 1, name: 'John', createdAt: new Date()});
     // @ts-expect-error campo desconhecido não faz parte do output do schema
     new UserEntity({id: '1', name: 'John', createdAt: new Date(), passwordHash: 'secret'});
+  });
+});
+
+describe('instance', () => {
+  it('implementa exatamente a assinatura travada em #/class/types (REQ-026)', () => {
+    expectTypeOf(instance).toEqualTypeOf<InstanceSchemaFactory>();
+    expectTypeOf(v.instance).toEqualTypeOf<InstanceSchemaFactory>();
+    expectTypeOf(instance).toEqualTypeOf<typeof v.instance>();
+    expectTypeOf(instance(UserEntity)).toEqualTypeOf<z.ZodCodec<UserSchema, z.ZodType<UserEntity>>>();
+    expectTypeOf(instance(AdminEntity)).toEqualTypeOf<z.ZodCodec<UserSchema, z.ZodType<AdminEntity>>>();
+    // @ts-expect-error um ZodObject cru não é uma classe Class()
+    instance(userSchema);
+    // @ts-expect-error classe comum não é uma classe Class()
+    instance(PlainClass);
+    // @ts-expect-error uma instância não é a classe
+    instance(UserEntity.parse({}));
+  });
+
+  it('tipa o campo aninhado como o codec da classe referenciada (REQ-026)', () => {
+    expectTypeOf(OrderEntity.shape.owner).toEqualTypeOf<z.ZodCodec<UserSchema, z.ZodType<UserEntity>>>();
+    expectTypeOf<z.output<typeof OrderEntity.shape.owner>>().toEqualTypeOf<UserEntity>();
+    // É exatamente o que `instance` acrescenta: o mesmo codec de `UserEntity.schema` (`z.output<UserSchema>`, um
+    // objeto plano sem os membros da classe) re-tipado para a instância.
+    expectTypeOf<z.output<typeof OrderEntity.shape.owner>>().not.toEqualTypeOf<z.output<UserSchema>>();
+    expectTypeOf<z.output<typeof UserEntity.schema>>().toEqualTypeOf<z.output<UserSchema>>();
+    expectTypeOf<z.input<typeof OrderEntity.shape.owner>>().toEqualTypeOf<z.input<UserSchema>>();
+  });
+
+  it('parse devolve o campo aninhado como instância, não como objeto plano (REQ-026)', () => {
+    const order = OrderEntity.parse({});
+
+    expectTypeOf(order).toEqualTypeOf<OrderEntity>();
+    expectTypeOf(order.owner).toEqualTypeOf<UserEntity>();
+    expectTypeOf(order.owner.displayName).toEqualTypeOf<string>();
+    expectTypeOf(order.owner.createdAt).toEqualTypeOf<Date>();
+    expectTypeOf(OrderEntity.safeParse({})).toEqualTypeOf<z.ZodSafeParseResult<OrderEntity>>();
+    // @ts-expect-error o aninhado é instância de UserEntity, não um objeto plano estrutural qualquer
+    expectTypeOf(order.owner).toEqualTypeOf<z.input<UserSchema>>();
+  });
+
+  it('encode devolve o aninhado no formato de transporte (REQ-023, REQ-026)', () => {
+    const encoded = OrderEntity.encode(OrderEntity.parse({}));
+
+    expectTypeOf(encoded).toEqualTypeOf<z.input<typeof OrderEntity.object>>();
+    expectTypeOf(encoded.owner).toEqualTypeOf<z.input<UserSchema>>();
+    expectTypeOf(encoded.owner.createdAt).toEqualTypeOf<string | Date>();
+    expectTypeOf(encoded.owner).not.toEqualTypeOf<UserEntity>();
+  });
+
+  it('o construtor recebe a instância aninhada (REQ-024, REQ-026)', () => {
+    expectTypeOf(OrderEntity).constructorParameters.toEqualTypeOf<[{code: string; owner: UserEntity}]>();
+    // @ts-expect-error o campo aninhado é tipado como instância, um objeto plano não basta
+    new OrderEntity({code: 'A-1', owner: {id: '1', name: 'John', createdAt: new Date()}});
   });
 });
 

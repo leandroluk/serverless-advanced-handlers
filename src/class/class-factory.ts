@@ -1,10 +1,10 @@
 /**
- * Runtime de `Class(source)` e `isServerlessAdvancedHandlersClass(value)` (REQ-020..REQ-025).
+ * Runtime de `Class(source)`, `isServerlessAdvancedHandlersClass(value)` e `instance(Cls)` (REQ-020..REQ-026).
  *
- * Os tipos públicos (`AdvancedClass`, `ClassFactory`, `AdvancedClassGuard`) vivem em `#/class/types` e são API
- * travada pelo snapshot de `test/public-api.spec.ts`. Este módulo **só implementa as funções**: as duas são
- * anotadas com o alias correspondente, de modo que qualquer divergência em relação ao contrato vira erro de
- * compilação aqui, e não uma mudança silenciosa da superfície pública.
+ * Os tipos públicos (`AdvancedClass`, `ClassFactory`, `AdvancedClassGuard`, `InstanceSchemaFactory`) vivem em
+ * `#/class/types` e são API travada pelo snapshot de `test/public-api.spec.ts`. Este módulo **só implementa as
+ * funções**: as três são anotadas com o alias correspondente, de modo que qualquer divergência em relação ao
+ * contrato vira erro de compilação aqui, e não uma mudança silenciosa da superfície pública.
  *
  * O marcador de classe (`CLASS_MARK`) é **detalhe de runtime** e de propósito não aparece em `AdvancedClass`:
  * ele é definido como estático da classe gerada e lido por cast dentro do guard.
@@ -12,7 +12,13 @@
 
 import * as z from 'zod';
 
-import type {AdvancedClass, AdvancedClassGuard, ClassFactory} from '#/class/types';
+import type {
+  AdvancedClass,
+  AdvancedClassGuard,
+  AnyAdvancedClass,
+  ClassFactory,
+  InstanceSchemaFactory,
+} from '#/class/types';
 
 /**
  * Marcador das classes criadas por `Class()` (REQ-025).
@@ -167,3 +173,31 @@ export const Class: ClassFactory = <S extends z.ZodObject>(source: S | AdvancedC
 
   return Base as unknown as AdvancedClass<S>;
 };
+
+/**
+ * Campo que referencia outra classe `Class()`, tipado como **instância** dela (REQ-026).
+ *
+ * ```ts
+ * class Order extends Class(v.object({owner: v.instance(UserEntity)})) {}
+ *
+ * Order.parse(raw).owner; // UserEntity (estática e em runtime), não `{id, name, createdAt}` plano
+ * ```
+ *
+ * Não constrói nada: devolve o próprio `cls.schema`, que já é o codec `objeto → instância` memoizado por
+ * subclasse. Criar um codec novo aqui quebraria duas coisas de uma vez — a identidade do schema (dois campos
+ * apontando para a mesma classe deixariam de compartilhar referência) e a memoização por `this`, que é o que
+ * faz `parse` devolver a subclasse chamadora.
+ *
+ * A assinatura, portanto, **só re-tipa**: `AnyAdvancedClass` achata `schema` para
+ * `z.ZodCodec<z.ZodObject, z.ZodType<Record<string, unknown>>>` (é um supertipo, precisa valer para qualquer
+ * schema), e o genérico `T` recupera o schema concreto (`T['object']`) e a instância concreta
+ * (`InstanceType<T>`) que o `Class()` já produz em runtime. Daí o cast: ele estreita o supertipo de volta ao
+ * tipo concreto, sem tocar no valor.
+ *
+ * `encode` atravessa o campo normalmente — o lado de output do codec aceita a instância (ou um objeto plano
+ * equivalente) e o lado de input aplica os codecs do schema aninhado, então nenhum campo do aninhado se perde.
+ */
+export const instance: InstanceSchemaFactory = <T extends AnyAdvancedClass>(
+  cls: T
+): z.ZodCodec<T['object'], z.ZodType<InstanceType<T>>> =>
+  cls.schema as unknown as z.ZodCodec<T['object'], z.ZodType<InstanceType<T>>>;

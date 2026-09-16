@@ -93,5 +93,6 @@
 - [2026-09-15] Quick task (usuário) — exceções HTTP 4xx/5xx restantes complete. Gate: 258/258 + `pnpm test` 373/373. QA PASS, PO ACCEPTED. REQ-051 ampliada (35 subclasses). Integração feita com `git stash --keep-index` para separar do commit da T-007. Commit: `feat(http)` exceptions. [REQ-051]
 - [2026-09-15] public-api-surface T-002 complete. Gate: typecheck 14/14 + spec de runtime 37/37 + `pnpm check`/`lint:ci`/`test` (424/424)/`build`. QA PASS, PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(decorators)` OpenAPI. [REQ-070]
 - [2026-09-15] public-api-surface T-003 complete. Gate: typecheck 6/6 + spec de modos 7/7 + `pnpm check`/`lint:ci`/`test` (437/437)/`build`. QA PASS (D-1 corrigido), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(decorators)` LambdaConfig. [REQ-080]
+- [2026-09-15] public-api-surface T-004 complete. Gate: spec 23/23 + typecheck 15/15 + `pnpm check`/`lint:ci`/`test` (475/475)/`build`. QA PASS, PO ACCEPTED. SPEC_DEVIATION: none. `/runtime` passa a exportar `defineReflectMetadata`. Commit: `feat(decorators)` pipeline/Reflector. [REQ-060, REQ-063, REQ-066]
 
 ---

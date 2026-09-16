@@ -25,9 +25,19 @@
  *
  * O registry de JSON Schema das extensões (`withJsonSchema`/`getJsonSchemaOverride`) **não** entra no
  * objeto `v`: é interno, consumido só por `#/validation/openapi`.
+ *
+ * **`v.instance` (REQ-026):** `instance` mora em `#/class/class-factory` (F04) e entra aqui pelo mesmo
+ * `Object.assign` das extensões. A nota de integração deixada em `validation-engine/tasks.md` previa só um
+ * `export {instance} from '#/class/class-factory'`, mas isso é anterior à decisão 17: com `v` sendo uma
+ * `const` (e não um namespace sintetizado por `export *`), um export nomeado do módulo não vira membro de `v`
+ * — daria `import {instance} from '#/validation/v'` e **não** `v.instance()`, que é o que REQ-026 pede. O
+ * export nomeado fica também, por simetria com as extensões, mas quem cria `v.instance` é a entrada no objeto.
+ * A direção do import é `v.ts → class-factory.ts` (e não o contrário): `class-factory` só depende de `zod` e
+ * de `#/class/types`, então não há ciclo.
  */
 
 import * as z from 'zod';
+import {instance} from '#/class/class-factory';
 import {boolish, datetime, delimited, duration, file, parseBytes, timestamp} from '#/validation/extensions';
 
 /**
@@ -64,7 +74,7 @@ declare module 'zod' {
   }
 }
 
-const extensions = {boolish, datetime, delimited, duration, file, parseBytes, timestamp};
+const extensions = {boolish, datetime, delimited, duration, file, instance, parseBytes, timestamp};
 
 type V = typeof z & typeof extensions;
 
@@ -77,7 +87,7 @@ namespace v {
   export type output<T extends z.ZodType> = z.output<T>;
 }
 
-export {v};
+export {instance, v};
 
 /**
  * Tipos auxiliares das extensões (retorno de `boolish`/`delimited`/etc. e suas opções) — importáveis
