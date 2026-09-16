@@ -1,6 +1,6 @@
 # State
 
-Last synced commit: 860a800
+Last synced commit: 6f6dcc2
 **Last Updated:** 2026-09-15
 
 ## Current Work
@@ -11,6 +11,8 @@ Além das 21 tasks, dois itens fora do fluxo de feature: quick task do usuário 
 Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43 comunidades) e docs de codebase `STRUCTURE.md`/`INTEGRATIONS.md` criados.
 
 **F02 `poc-risks` concluída (5/5).** Nenhum risco refutado; a maioria ganhou requisitos concretos de implementação para F06/F10 — ver `.specs/codebase/CONCERNS.md` e `.specs/features/poc-risks/findings/`. Único item em aberto: deploy real em AWS pra REQ-207 virar `PASS` (proxy local já é indicativo forte), sob autorização explícita futura.
+
+**F03 `validation-engine` e F04 `class-factory` especificadas (Tasks).** Não precisaram de nova Specify/Design — REQ-010..026 e os contratos públicos (`Class`, `v`, `instance`) já existiam em `public-api/spec.md`/`design.md` desde a fase Complex original; só faltava o breakdown em tasks e a execução. F03: 3 tasks sequenciais (`v` core → meta/resolveMeta → toOpenapiSchema). F04: 2 tasks sequenciais (`Class()`+guard → `instance()`+integração com `v`). Nenhuma execução ainda.
 
 ## Todos
 - [x] F00 `project-setup` — Execute phase
@@ -37,14 +39,22 @@ Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43
 - [x] Execute F02 T-205: SWC no modo B (decorators legado + `emitDecoratorMetadata`) — PASS-COM-RESSALVA
 - [x] Execute F02 T-206: source maps encadeados (AST transform → bundle) — PASS
 - [x] Execute F02 T-207: harness de benchmark de granularidade (sem deploy real) — PASS-COM-RESSALVA
-- [ ] Commit F02 T-207: findings + CONCERNS.md atualizado (**F02 `poc-risks` fica 5/5 completa**)
+- [x] Commit F02 T-207: findings + CONCERNS.md atualizado (**F02 `poc-risks` fica 5/5 completa**)
 - [ ] Deploy real em AWS pra fechar REQ-207 como PASS — requer autorização explícita do usuário + ambiente com rede liberada (esta sessão falha SSL contra endpoints AWS)
 - [ ] Instalar o hook de pós-commit do graphify (`.git/hooks/post-commit`) — bloqueado pelo classificador de auto mode nesta sessão; até lá, rodar `graphify update . --no-viz --code-only` manualmente após cada commit relevante
+- [x] Especificar F03 `validation-engine` (Tasks: T-001..T-003)
+- [x] Especificar F04 `class-factory` (Tasks: T-001..T-002)
+- [ ] Execute F03 T-001: reexport do Zod + extensões primitivas (`v.boolish`, `v.delimited`, `v.duration`, `v.datetime`/`timestamp`, `v.file`)
+- [ ] Execute F03 T-002: augmentation de `.meta()` + `resolveMeta` + `validateMeta`
+- [ ] Execute F03 T-003: `toOpenapiSchema`
+- [ ] Execute F04 T-001: `Class()` + `isServerlessAdvancedHandlersClass`
+- [ ] Execute F04 T-002: `instance()` + integração com `v`
 
 ## Active Blockers
 - none
 
 ## Recent Decisions (Last 15)
+- [2026-09-15] F03 `validation-engine` e F04 `class-factory` vão direto pra Tasks (sem Specify/Design novos): REQ-010..026 e os `Public Contracts` já existiam em `public-api/design.md` desde a fase Complex original. F03 = 3 tasks sequenciais (`v` core, precisa adicionar `ms` como primeira `dependencies` real do pacote → meta/resolveMeta → toOpenapiSchema). F04 = 2 tasks sequenciais (`Class()`+guard → `instance()`, que integra com `v.ts`). Restrição: `src/class/types.ts` já é API pública travada pelo snapshot de public-api-surface T-005 — nenhuma task pode alterá-lo.
 - [2026-09-15] F02 `poc-risks` design + tasks concluídos: 5 tasks (T-201/204/205/206 em P1, T-207 em P2). Harness de cada experimento é descartável (scratchpad, nunca worktree git, nunca dependência nova em `package.json` da lib) — só o veredito escrito (`FINDINGS-<REQ>.md`) é commitado. Sem QA dedicado (não há código pra verificar); orquestrador substitui o PO revisando a evidência.
 - [2026-09-15] F02 `poc-risks` especificada (REQ-201..207, um risco do ROADMAP por REQ). Escopo: experimentos descartáveis fora de `src/` (scratchpad/worktree, nunca commitados como código), só o veredito escrito entra no repo. REQ-207 (benchmark de cold start) para no artefato pronto — deploy real em AWS fica sob autorização explícita, sessão separada. Descoberta: AWS CLI configurado mas rede desta sessão falha SSL contra endpoints AWS.
 - [2026-09-15] REQ-051 ampliada, a pedido do usuário (que implementou): uma subclasse de `HttpException` para cada status 4xx/5xx do `HttpStatus` (35 no total), com paridade NestJS. Tratada como quick task com QA e commit próprio.
@@ -64,7 +74,6 @@ Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43
 - [2026-09-14] Modos de decorators A/B/C detectados pelo tsconfig; **B (legado + emitDecoratorMetadata) é o padrão**; SWC + `reflect-metadata` só onde necessário; marcadores de tipo para parâmetros (obrigatórios no C).
 - [2026-09-14] Testes: `overrideProvider({ provide, useValue | useClass | useFactory, inject? })` no formato de provider do `@Module`, variádico, com estratégias mutuamente excludentes (tipagem e runtime); mesmo formato em `overrideGuard/Interceptor/Filter`.
 - [2026-09-14] Ferramental: Vitest, oxlint + oxfmt, Conventional Commits (commitlint), lefthook e pnpm, espelhando o monorepo Metha (hooks sem turbo por ser pacote único).
-- [2026-09-14] Q4: guards/interceptors/filters usam `ExecutionContext` com paridade NestJS + `Reflector` alimentado por metadados gerados no build.
 ## Recent Progress (Last 10)
 - [2026-09-15] F02 `poc-risks` T-207 complete — harness de 4 variantes (A NestJS completo, B/B2 por controller, C por método), buildam e executam localmente. Proxy local: A ~115 ms/900× bundle vs. C; B2 (deps de métodos irmãos) ~42 ms/497× vs. C; B (sem deps irmãs) ~0,1 ms. Script de medição AWS real pronto, não executado (SSL falha nesta sessão contra endpoints AWS; requer autorização explícita + rede liberada). **F02 `poc-risks` concluída (5/5).** `CONCERNS.md` atualizado com critério de aceite pro F06 (bundle do método X não pode conter módulo só alcançável a partir do método Y). Commit: `docs(poc-risks)` T-207 (este commit).
 - [2026-09-15] F02 `poc-risks` P1 (T-201, T-204, T-205, T-206) complete — 4 agentes DEV em paralelo, experimentos descartáveis fora do repo. REQ-201 PASS, REQ-202 PASS-COM-RESSALVA (Serverless v3 sem `nodejs24.x` no enum, patch de schema necessário no F10), REQ-203 PASS (3 motores); REQ-204 PASS-COM-RESSALVA (`ERR_REQUIRE_ESM` refutado, dois outros erros reais mitigados); REQ-205 PASS-COM-RESSALVA (SWC ≡ tsc em `design:paramtypes`); REQ-206 PASS (source maps encadeados, com requisito concreto pro slicer do F06). `CONCERNS.md` e `spec.md` atualizados com os achados. T-207 (P2) pendente. Commit: `docs(poc-risks)` findings (este commit).
