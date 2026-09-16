@@ -14,7 +14,7 @@ Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43
 
 **F03 `validation-engine` (3/3) e F04 `class-factory` (2/2) concluídas.** Não precisaram de nova Specify/Design — REQ-010..026 e os contratos públicos (`Class`, `v`, `instance`) já existiam em `public-api/spec.md`/`design.md` desde a fase Complex original. No caminho, um bug real de bundling do `tsdown` foi achado e corrigido (design.md decisão 17).
 
-**F05 `di-aot` em andamento.** Escopo maior: primeiro código de compilador (usa `ts-morph`), REQ-004..008/030..037 já existem, mas a arquitetura interna (`compiler/decorator-mode.ts`, `ast-analyzer.ts`, `di-resolver.ts`) não tinha Design ainda. Risco "ts-morph × TypeScript 7" (CONCERNS.md) validado por protótipo antes de desenhar: resolução de parâmetro através de barrel, leitura do array `providers` do `@Module`, detecção de ciclo, ordenação topológica, e os dois casos do "subconjunto analisável" (interface sem `@Inject`, `SpreadElement` em array) — todos confirmados funcionando. Seguindo pra Design.
+**F05 `di-aot`: Specify + Design concluídos.** Escopo maior: primeiro código de compilador (usa `ts-morph`), REQ-004..008/030..037 já existem, mas a arquitetura interna não tinha Design ainda. Risco "ts-morph × TypeScript 7" (CONCERNS.md) validado por protótipo antes de desenhar. 3 tasks: T-001 (erros + detector de modo) e T-002 (analisador AST) em P1, T-003 (resolvedor de DI completo) em P2. `src/compiler/**` não é exportado por nenhuma entrada pública (só `/plugin` vai consumir, em F10) — sem impacto no snapshot de `public-api.spec.ts`. Nenhuma execução ainda.
 
 ## Todos
 - [x] F00 `project-setup` — Execute phase
@@ -51,6 +51,12 @@ Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43
 - [x] Execute F03 T-003: `toOpenapiSchema` — PASS. **F03 `validation-engine` concluída (3/3).**
 - [x] Execute F04 T-001: `Class()` + `isServerlessAdvancedHandlersClass` — PASS
 - [x] Execute F04 T-002: `instance()` + integração com `v` — PASS. **F04 `class-factory` concluída (2/2).**
+- [x] Especificar F05 `di-aot` (spec.md, referenciando REQ-004..008/030..037 já existentes)
+- [x] Design F05 `di-aot` (compiler/errors.ts, decorator-mode.ts, ast-analyzer.ts, di-resolver.ts + catálogo SAH1xx)
+- [x] Tasks F05 `di-aot` (T-001+T-002 em P1, T-003 em P2)
+- [ ] Execute F05 T-001: `compiler/errors.ts` + `compiler/decorator-mode.ts`
+- [ ] Execute F05 T-002: `compiler/ast-analyzer.ts`
+- [ ] Execute F05 T-003: `compiler/di-resolver.ts` (algoritmo completo)
 
 ## Active Blockers
 - none
