@@ -69,5 +69,6 @@ export type {
 export {Reflector} from '#/pipeline/reflector';
 export type {ReflectableDecorator, ReflectTarget} from '#/pipeline/reflector';
 export {resolveMeta, validateMeta} from '#/validation/meta';
+export {toOpenapiSchema} from '#/validation/openapi';
 export {v} from '#/validation/v';
 export type {ByteSize} from '#/validation/v';

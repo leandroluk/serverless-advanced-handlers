@@ -169,6 +169,8 @@ const ROOT_EXPORTS = [
   // #/validation/meta
   'resolveMeta',
   'validateMeta',
+  // #/validation/openapi
+  'toOpenapiSchema',
   // #/validation/v (namespace)
   'ByteSize',
   'v',

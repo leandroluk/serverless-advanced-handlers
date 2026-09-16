@@ -67,6 +67,12 @@
   - Uma propriedade com `meta({name: 'first_name'})` aparece como `first_name` no objeto gerado (não como o nome do campo TS).
   - Funciona com `specVersion: '3.0'` e `'3.1'` (formatos diferentes onde aplicável, ex. `exclusiveMinimum`).
 - **Gate**: `pnpm vitest run test/validation-openapi.spec.ts`
+- **[x] Concluída.** Gate: 35/35 + `pnpm check`/`lint:ci`/`test` (622/622)/`build`. QA PASS (reproduziu isoladamente o problema do clone em `.meta()` e a colisão de nome de transporte), PO ACCEPTED.
+- **SPEC_DEVIATION (aceita):** `.meta()` no Zod 4 clona o schema (`_zod.parent` aponta pro original), então `getJsonSchemaOverride(ctx.zodSchema)` sozinho não acha o override de uma extensão com `.meta()` (ex.: `v.duration().meta({name:'ttl'})`) — a leitura literal do AC original era incompatível com o requisito de renomeação via `meta.name`. Fix: sobe a cadeia `_zod.parent` até achar o override (mesma técnica do `globalRegistry.get` nativo do Zod). A limpeza de chaves do override preserva seletivamente `title`/`description`/`deprecated`/`examples` já calculados pelo Zod (lista fechada), pra não perder documentação de `.meta()` aplicada sobre uma extensão.
+- **Comportamento extra (aceito):** `renameProperties` lança em colisão de nome de transporte (dois campos mapeando pro mesmo nome de saída) — evita um JSON Schema malformado silencioso (`required` com chave duplicada).
+- **Notas de execução:** tipo de retorno real é `z.core.JSONSchema.BaseSchema` (não `JsonSchemaObject`, que não existe no Zod 4 — era placeholder do design.md).
+
+**F03 `validation-engine` concluída (3/3).**
 
 ---
 

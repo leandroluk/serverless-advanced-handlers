@@ -557,6 +557,10 @@ export declare function parameterDecorator(): ParameterDecorator;
 
 export declare function resolveMeta<T extends AnySchema>(schema: T): z.core.$replace<z.core.GlobalMeta, T>;
 
+export declare function toOpenapiSchema(schema: z.ZodType, opts: {
+    specVersion: '3.0' | '3.1';
+}): z.core.JSONSchema.BaseSchema;
+
 declare const v: V;
 
 declare namespace v {

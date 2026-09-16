@@ -99,7 +99,8 @@ declare module 'zod' {
 
 // raiz
 export function resolveMeta(schema: z.ZodType): z.GlobalMeta;
-export function toOpenapiSchema(schema: z.ZodType, opts: { specVersion: '3.0' | '3.1' }): JsonSchemaObject;
+export function toOpenapiSchema(schema: z.ZodType, opts: { specVersion: '3.0' | '3.1' }): z.core.JSONSchema.BaseSchema;
+// `JsonSchemaObject` era placeholder; o tipo real e público do Zod 4 é `z.core.JSONSchema.BaseSchema` (validation-engine T-003).
 ```
 
 ### Classes (raiz) — F04

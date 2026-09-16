@@ -10,7 +10,7 @@ Fonte: [INSIGHT.md §11](../../INSIGHT.md). Cada feature referencia os REQs do c
 | F01a| `public-api-core`     | —            | F00, F01                            | Concluída (8/8)      |
 | F01b| `public-api-surface`  | —            | F01a                                | Concluída (5/5)      |
 | F02 | `poc-risks`           | Fase 0       | F01                                 | Concluída (5/5)      |
-| F03 | `validation-engine`   | Fase 1       | F01                                 | Execute (2/3)        |
+| F03 | `validation-engine`   | Fase 1       | F01                                 | Concluída (3/3)      |
 | F04 | `class-factory`       | Fase 1       | F03                                 | Tasks concluídas (0/2) |
 | F05 | `di-aot`              | Fases 1–2    | F01                                 | Planejada            |
 | F06 | `method-slicing`      | Fase 3       | F05, F02                            | Planejada            |
