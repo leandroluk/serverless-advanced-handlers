@@ -105,3 +105,13 @@
 - [2026-09-15] public-api-surface T-004 complete. Gate: spec 23/23 + typecheck 15/15 + `pnpm check`/`lint:ci`/`test` (475/475)/`build`. QA PASS, PO ACCEPTED. SPEC_DEVIATION: none. `/runtime` passa a exportar `defineReflectMetadata`. Commit: `feat(decorators)` pipeline/Reflector. [REQ-060, REQ-063, REQ-066]
 
 ---
+
+## Archive — 2026-09-16 (compaction 11)
+
+### Decisions
+- [2026-09-14] Modos de decorators A/B/C detectados pelo tsconfig; **B (legado + emitDecoratorMetadata) é o padrão**; SWC + `reflect-metadata` só onde necessário; marcadores de tipo para parâmetros (obrigatórios no C).
+
+### Lessons Learned
+- [2026-09-14] Agentes definidos em `.claude/agents/` durante a sessão só ficam disponíveis após reiniciar; até lá, use `general-purpose` com `model` e as instruções do arquivo (o esforço não pode ser fixado). QA de tipos precisa de temporários dentro do escopo do tsconfig (`test/__qa__/`). pnpm 12 exige `allowBuilds` para pacotes com build script (lefthook, esbuild); worktrees instaladas com `--ignore-scripts` escondem isso, então é preciso validar `pnpm install` no master a cada integração.
+
+---

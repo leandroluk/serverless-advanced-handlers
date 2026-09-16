@@ -70,3 +70,10 @@
   - `providers: [...spread]` → `SAH100`.
   - `useFactory` com `inject: [TOKEN, {token: OTHER, optional: true}]` resolvido corretamente, incluindo o caso `optional` ausente do grafo sem erro.
 - **Gate**: `pnpm vitest run test/compiler/di-resolver.spec.ts`
+- **[x] Concluída.** Gate: 53/53 + `pnpm check`/`lint:ci`/`test`/`build`. QA PASS com 3 defeitos menores não-bloqueadores (D-1, D-2, D-3), PO ACCEPTED após documentação de D-1/D-2.
+- **Notas de execução:** fixtures usam decorators/tipos reais de `src/decorators/di.ts` e `src/di/{tokens,providers}.ts` (sem stubs). `AppGraph.providers` guarda todos os providers do app (não só os `@Global()`); a visibilidade de `@Global()` fica isolada num `globalRegistry` interno usado só no lookup. Controllers entram no grafo de detecção de ciclo (DFS cobre `graph.keys()`) mas ficam de fora do array `order` final. `useExisting` adiciona aresta própria no grafo de ciclo (`existingToken`), então um ciclo só de aliases é detectado. Três defeitos QA, resolvidos assim:
+  - **D-1** (token duplicado entre módulos não relacionados, sem `@Global()`: primeiro provider varrido vence, silenciosamente): documentado com comentário de uma linha em `buildRegistries` (`di-resolver.ts:660`) — decisão consciente, não lacuna; sem código SAH pra isso.
+  - **D-2** (classe sem constructor próprio não herda parâmetros do construtor da classe base — `deps: []`): documentado com comentário de uma linha em `readConstructorDependencies` (`di-resolver.ts:519`) — limitação conhecida, sem suporte a herança nesta primeira versão.
+  - **D-3** (marcadores de tipo Modo C, ex. `Inject<typeof TOKEN>`, disparam `SAH103` incorretamente): confirmado fora de escopo de T-003 (REQ-007/Modo C não está entre REQ-030..037; nenhum "Done when" menciona Modo C). Registrado como issue aberta em `.specs/project/STATE.md` (todos) para a task futura que implementar REQ-007.
+
+**F05 `di-aot` concluída (3/3).**
