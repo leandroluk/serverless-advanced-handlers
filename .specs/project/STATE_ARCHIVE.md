@@ -79,6 +79,14 @@
 
 ---
 
+## Archive — 2026-09-16 (compaction 10)
+
+### Progress
+- [2026-09-15] public-api-surface T-005 complete. Gate: 4/4 + suíte completa 479/479 + `pnpm check`/`lint:ci`/`build`. QA PASS (reproduziu adversarial e determinismo independentemente), PO ACCEPTED. SPEC_DEVIATION: snapshot resolve chunks internos do tsdown e inlina 5 tipos de DI em vez de reexport vazio. **F01b `public-api-surface` concluída (5/5).** Commit: `test(public-api)`. [REQ-001]
+- [2026-09-15] Quick fix: `InjectionToken<T>` tornado nominal (`declare private readonly __type: T`, antes público e opcional). Gate: typecheck 23/23 + suíte completa 480/480 + `pnpm check`/`lint:ci`/`build`. QA PASS (reproduziu rejeição TS2741/TS2322 e provou que os `@ts-expect-error` não eram mortos via revert temporário), PO ACCEPTED. Snapshot da API pública (T-005) atualizado para refletir a nova forma. Commit: `fix(di)`.
+
+---
+
 ## Archive — 2026-09-15 (compaction 9)
 
 ### Progress

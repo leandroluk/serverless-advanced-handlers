@@ -28,6 +28,8 @@
   - `CompilerError` formata a mensagem exatamente como o padrão documentado, com arquivo e linha reais de uma fixture.
   - `detectDecoratorMode` retorna `'A'`/`'B'`/`'C'` corretamente pra 3 fixtures de tsconfig (uma por modo), incluindo um tsconfig que usa `extends` (confirma que o efetivo é lido, não só o arquivo raiz).
 - **Gate**: `pnpm vitest run test/compiler/errors.spec.ts test/compiler/decorator-mode.spec.ts`
+- **[x] Concluída.** Gate: 17/17 + `pnpm check`/`lint:ci`/`test` (723/723, junto com T-002)/`build`. QA PASS (gate reexecutado do zero, boundary REQ-002 confirmado por grep no `dist/`), PO ACCEPTED.
+- **Notas de execução:** 5 fixtures de tsconfig, não 3 — `mode-a-extends` (override local vence base) além de `mode-b-extends` (herança pura), cobrindo precedência de `extends`. `CompilerError.code` guarda só a parte numérica (`'101'`, não `'SAH101'`) — convenção que T-002/T-003 seguem. `ts-morph@28.0.0` instalado como devDependency (já coberto por `buildTimeOnly` em `tsdown.config.ts`).
 
 ## T-002: Analisador de AST genérico
 - **REQ**: REQ-033, REQ-036 (parcial — a validação em si; o disparo pleno do erro é usado por T-003)
@@ -44,6 +46,8 @@
   - `readAnalyzableArray` aceita um array literal só com identificadores/chamadas reconhecidas e lança `SAH100` (com arquivo/linha corretos) num array com `SpreadElement`.
   - `resolveIdentifierToClass`/`resolveTypeToClass` resolvem através de um barrel (`export * from`) até a classe concreta, e retornam `undefined` pra uma interface (não lançam — quem decide se é erro é o `di-resolver.ts`).
 - **Gate**: `pnpm vitest run test/compiler/ast-analyzer.spec.ts`
+- **[x] Concluída.** Gate: 25/25 + `pnpm check`/`lint:ci`/`test` (723/723)/`build`. QA PASS (reproduziu isoladamente o caso `providers: getProviders()` sem a validação extra, confirmou `Repo<User>` vs `Promise<Logger>`, testou ciclo de re-export circular sem loop infinito), PO ACCEPTED.
+- **Notas de execução:** `readAnalyzableArray` também lança `SAH100` quando o valor não é `ArrayLiteralExpression` (não só quando tem elemento fora de `allowedKinds`) — o PO confirmou que isso já estava explícito no design.md, não é desvio. `resolveTypeToClass` resolve a raiz de um genérico que é classe (`Repo<User>` → `Repo`); só wrappers cujo símbolo não é classe (`Promise<T>`) dão `undefined`. Guarda de ciclo por `compilerSymbol` no laço de resolução de alias.
 
 ## T-003: Resolvedor de DI (algoritmo completo)
 - **REQ**: REQ-030, REQ-031, REQ-032, REQ-033, REQ-034, REQ-036, REQ-037

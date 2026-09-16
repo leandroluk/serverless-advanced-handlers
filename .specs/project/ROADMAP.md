@@ -12,7 +12,7 @@ Fonte: [INSIGHT.md §11](../../INSIGHT.md). Cada feature referencia os REQs do c
 | F02 | `poc-risks`           | Fase 0       | F01                                 | Concluída (5/5)      |
 | F03 | `validation-engine`   | Fase 1       | F01                                 | Concluída (3/3)      |
 | F04 | `class-factory`       | Fase 1       | F03                                 | Concluída (2/2)      |
-| F05 | `di-aot`              | Fases 1–2    | F01                                 | Tasks concluídas (0/3) |
+| F05 | `di-aot`              | Fases 1–2    | F01                                 | Execute (2/3)        |
 | F06 | `method-slicing`      | Fase 3       | F05, F02                            | Planejada            |
 | F07 | `http-runtime`        | Fase 3       | F04, F05                            | Planejada            |
 | F08 | `request-pipeline`    | Fase 3       | F05, F07                            | Planejada            |
