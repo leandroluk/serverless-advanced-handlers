@@ -74,6 +74,7 @@
 - [2026-09-14] Q2: rota com corpo sem schema `Class()` gera erro de build por padrão; `responses.missingSchema: warn` rebaixa para warning.
 - [2026-09-14] Q3: corpo de erro default compatível com NestJS; RFC 9457 via `errors.format: problem-json`.
 - [2026-09-14] Q4: guards/interceptors/filters usam `ExecutionContext` com paridade NestJS + `Reflector` alimentado por metadados gerados no build.
+- [2026-09-14] Ferramental: Vitest, oxlint + oxfmt, Conventional Commits (commitlint), lefthook e pnpm, espelhando o monorepo Metha (hooks sem turbo por ser pacote único).
 
 ---
 
@@ -88,5 +89,6 @@
 - [2026-09-14] public-api-core T-002 complete. Gate: 10/10 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: forma TC39 de `DualMethodDecorator` genérica em `This` (design decisão 16). Commit: `feat(decorators)`. [REQ-004, REQ-005, REQ-007]
 - [2026-09-14] public-api-core T-008 complete. Gate: 69/69 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(http)` exceptions. [REQ-049, REQ-051]
 - [2026-09-15] public-api-core T-001 complete. Gate: 7/7 pass + `pnpm check`/`lint:ci`/`test`. QA PASS (D-1 corrigido), PO ACCEPTED. SPEC_DEVIATION: `deps.neverBundle` no `tsdown.config.ts` (evita falso negativo do teste de fronteira). Commit: `test(boundaries)`. [REQ-001, REQ-002]
+- [2026-09-15] public-api-core T-007 complete. Gate: 18/18 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. **F01a `public-api-core` concluída (8/8).** Commit: `feat(decorators)` HTTP. [REQ-007, REQ-040..043, REQ-045, REQ-050]
 
 ---

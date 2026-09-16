@@ -68,3 +68,5 @@ export type {
 } from '#/pipeline';
 export {Reflector} from '#/pipeline/reflector';
 export type {ReflectableDecorator, ReflectTarget} from '#/pipeline/reflector';
+export {v} from '#/validation/v';
+export type {ByteSize} from '#/validation/v';

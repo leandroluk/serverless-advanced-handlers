@@ -48,6 +48,12 @@
       }
     },
     {
+      "files": ["src/validation/v.ts"],
+      "rules": {
+        "typescript/no-namespace": "off"
+      }
+    },
+    {
       "files": ["src/index.ts", "src/{validation,class,decorators,di,http,pipeline,runtime}/**"],
       "rules": {
         "no-restricted-imports": [

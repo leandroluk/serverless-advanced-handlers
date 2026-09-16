@@ -18,6 +18,7 @@ Referências: `C:\dev\github.com\leandroluk\metha\{lefthook.yaml,.oxlintrc.json,
   - `prefer-const`, `no-var`, `eqeqeq`, `no-unneeded-ternary`
   - `curly: all`
 - Exceções em `*.test.*` / `*.spec.*`: `no-explicit-any`, `no-floating-promises` e `explicit-function-return-type` desligadas.
+- Exceção em `src/validation/v.ts`: `no-namespace` desligado — merge de valor+namespace é a única forma de expor `v.infer<T>` sem cair no bug de bundling documentado em `public-api/design.md` (decisão 17). Único arquivo do pacote com essa exceção; qualquer novo caso precisa da mesma justificativa.
 - Ignorados: `dist`, `node_modules`, `coverage`/`.coverage`, `*.config.*`.
 - **Impacto no código do INSIGHT:** os trechos com `any` (ex.: `AdvancedClass<any>`, casts em `Class()`) precisam ser reescritos com `unknown`/tipos auxiliares ou justificados com `oxlint-disable-next-line` na implementação.
 

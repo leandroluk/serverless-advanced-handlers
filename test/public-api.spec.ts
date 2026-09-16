@@ -10,6 +10,11 @@ import {describe, expect, it} from 'vitest';
  * features futuras, então não têm inventário aqui.
  *
  * O teste consome `dist/*.d.mts`, produzido pelo `globalSetup` do projeto `dist` (`test/setup/build-dist.ts`).
+ *
+ * Limitação conhecida do bundler de declarações (rolldown-plugin-dts, F03 T-001): o namespace `v` é achatado
+ * em `declare namespace v_d_exports`, e o `export * from 'zod'` de `src/validation/v.ts` se perde no caminho
+ * — só as extensões próprias aparecem no snapshot. Em runtime (`dist/index.mjs`) o reexport do Zod está
+ * intacto; é só a declaração publicada que fica incompleta.
  */
 
 const dist = new URL('../dist/', import.meta.url);
@@ -159,6 +164,9 @@ const ROOT_EXPORTS = [
   'ReflectTarget',
   'ReflectableDecorator',
   'Reflector',
+  // #/validation/v (namespace)
+  'ByteSize',
+  'v',
 ];
 
 /** Exports esperados da entrada `/runtime`, derivados de `src/runtime/index.ts`. */

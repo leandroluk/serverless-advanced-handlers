@@ -31,6 +31,9 @@
   - `v.file()` sem args é idêntico a `z.file()`; `.min`/`.max`/`.mime` aplicados via opções.
   - `v.infer<>`/`v.input<>`/`v.output<>` funcionam sobre schemas construídos com `v`.
 - **Gate**: `pnpm vitest run test/validation-extensions.spec.ts && pnpm vitest run --typecheck test/types/validation.test-d.ts`
+- **[x] Concluída.** Gate: 55/55 + 18/18. QA PASS (reproduziu isoladamente o bug de bundling e validou o fix com um pacote consumidor real via `tsc --strict`), PO ACCEPTED.
+- **SPEC_DEVIATION (aceita):** `export * as v from './v'` não funciona quando `v.ts` reexporta um pacote externo (`export * from 'zod'`) e tem outros exports — o bundler de declarações (`tsdown`/`rolldown-plugin-dts`) sintetiza um namespace que descarta silenciosamente um dos dois lados na declaração publicada (runtime sempre correto). Fix: `v` declarado como `const` (interseção `typeof z & typeof extensions`) + `namespace v { infer/input/output }` (merge valor+namespace nativo do TS, único caso do pacote com `typescript/no-namespace` desligado). `index.ts` mudou para `export {v} from` + `export type {ByteSize} from` (só `ByteSize` é raiz, os demais tipos auxiliares das extensões — `ZodBoolish`, `BoolishOptions`, etc. — ficam como exports nomeados comuns de `v.ts`, fora do namespace, porque colocá-los lá também quebra por self-reference). Documentado em `public-api/design.md` decisão 17 e `CONVENTIONS.md`. **Padrão obrigatório para qualquer feature futura que reexporte um SDK externo como namespace membro** (candidato: F09 openapi).
+- **Notas de execução:** `ms@2.1.3` adicionado como primeira `dependencies` real do pacote (não tem `.d.ts` próprio, `@types/ms@2.1.0` em devDependencies). Suíte completa: 553/553.
 
 ## T-002: Augmentation de `.meta()` + `resolveMeta` + validação strict
 - **REQ**: REQ-016, REQ-017, REQ-018
