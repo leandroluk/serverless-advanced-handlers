@@ -38,6 +38,9 @@
   - `isServerlessAdvancedHandlersClass(Foo)` é `true`; `isServerlessAdvancedHandlersClass(v.object({}))` e de uma classe comum são `false`.
   - `class Bar extends Class(Foo) {}` — `Bar.object === Foo.object` (mesma referência de schema, não um clone).
 - **Gate**: `pnpm vitest run test/class-factory.spec.ts && pnpm vitest run --typecheck test/types/class-factory.test-d.ts`
+- **[x] Concluída.** Gate: 31/31 + 7/7 + `pnpm check`/`test` (660/660)/`build`. QA PASS (consumidor externo real, teste adversarial com ordem de acesso invertida entre subclasses, identidade de referência via `toBe`), PO ACCEPTED.
+- **SPEC_DEVIATION (aceita, documentada, não corrigida):** `encode()` tem tipo travado `z.output<S> | z.input<S>`, mas a implementação literal (`z.encode(object, value)`, prescrita pela task) só funciona partindo do OUTPUT — um valor já no formato de transporte (ex.: `{createdAt: '2024-...'}` em campo `v.datetime()`) compila mas lança `ZodError` em runtime. É limitação real do `z.encode` nativo, não bug; documentada em JSDoc com o fluxo correto (`Cls.parse(raw).encode()`), testada explicitamente. "Tolerar" isso inventaria comportamento não pedido e teria ambiguidade quando input/output coincidem em shape.
+- **Notas de execução:** `rebuild()` preserva `catchall` do schema original (`z.strictObject()` continua rejeitando chave extra depois de `omit()`/`pick()`) — bônus não pedido pelo AC mas coberto por teste.
 
 ## T-002: `instance()` + integração com `v`
 - **REQ**: REQ-026

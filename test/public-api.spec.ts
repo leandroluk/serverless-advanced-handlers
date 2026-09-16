@@ -23,6 +23,9 @@ const dist = new URL('../dist/', import.meta.url);
 
 /** Exports esperados da entrada raiz (`.`), derivados de `src/index.ts`. */
 const ROOT_EXPORTS = [
+  // #/class/class-factory
+  'Class',
+  'isServerlessAdvancedHandlersClass',
   // #/class/types
   'AdvancedClass',
   'AdvancedClassGuard',

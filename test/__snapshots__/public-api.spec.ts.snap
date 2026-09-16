@@ -54,6 +54,8 @@ interface CanActivate {
 
 export declare function Catch(...exceptions: Type<Error>[]): DualClassDecorator;
 
+export declare const Class: ClassFactory;
+
 type ClassFactory = <S extends z.ZodObject>(source: S | AdvancedClass<S>) => AdvancedClass<S>;
 
 export type ClassProvider<T = unknown> = {
@@ -550,6 +552,8 @@ export type ValueProvider<T = unknown> = {
 export declare function classDecorator(): DualClassDecorator;
 
 export declare function classOrMethodDecorator(): DualClassOrMethodDecorator;
+
+export declare const isServerlessAdvancedHandlersClass: AdvancedClassGuard;
 
 export declare function methodDecorator(): DualMethodDecorator;
 

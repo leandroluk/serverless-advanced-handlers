@@ -1,3 +1,4 @@
+export {Class, isServerlessAdvancedHandlersClass} from '#/class/class-factory';
 export type {
   AdvancedClass,
   AdvancedClassGuard,
