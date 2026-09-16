@@ -1,12 +1,12 @@
 # Structure
 
-Gerado a partir do código real (`src/`, 23 arquivos, ~1470 linhas) e do grafo (`.specs/graph/graph.json`, 930 nós/1890 arestas/43 comunidades — build `--code-only`, sem indexação semântica de `.specs/*.md` por falta de chave de LLM).
+Gerado a partir do código real (`src/`) e do grafo (`.specs/graph/graph.json`, 1033 nós/2058 arestas/49 comunidades — build `--code-only`, sem indexação semântica de `.specs/*.md` por falta de chave de LLM; a rotulagem de comunidades também depende de LLM, então nomes novos desde a última rotulagem aparecem como o nó-hub cru, ex. `extensions.ts`).
 
 ## Entradas do pacote (`package.json` exports)
 
 | Subpath      | Arquivo                | Estado                                                        |
 | :----------- | :---------------------- | :-------------------------------------------------------------- |
-| `.`          | `src/index.ts`          | Superfície declarativa completa (130 exports nomeados/tipos)    |
+| `.`          | `src/index.ts`          | Superfície declarativa + `v`/`Class()`/`toOpenapiSchema` (137 exports nomeados/tipos) |
 | `./runtime`  | `src/runtime/index.ts`  | Só `defineReflectMetadata` (usado pelo código gerado, F08)       |
 | `./testing`  | `src/testing/index.ts`  | Vazio (`export {}`) — feature futura                             |
 | `./plugin`   | `src/plugin/index.ts`   | Vazio (`export {}`), CJS — feature futura                        |
@@ -16,7 +16,13 @@ Gerado a partir do código real (`src/`, 23 arquivos, ~1470 linhas) e do grafo (
 ```
 src/
 ├── class/
-│   └── types.ts            # AdvancedClass, AnyAdvancedClass, ClassFactory, InstanceSchemaFactory
+│   ├── types.ts             # AdvancedClass, AnyAdvancedClass, ClassFactory, InstanceSchemaFactory, AdvancedClassGuard (tipos, API travada)
+│   └── class-factory.ts      # Class(source), isServerlessAdvancedHandlersClass() — runtime (F04 T-001)
+├── validation/
+│   ├── v.ts                  # namespace v: reexport do Zod 4 + extensões (const + namespace merge, ver design.md decisão 17)
+│   ├── extensions.ts           # boolish, delimited, duration, datetime, timestamp, file, parseBytes + registry de JSON Schema
+│   ├── meta.ts                  # resolveMeta (merge via wrappers), validateMeta (allowlist de chaves)
+│   └── openapi.ts                 # toOpenapiSchema (F03, completa)
 ├── decorators/
 │   ├── dual.ts              # DualClassDecorator, DualMethodDecorator, DualClassOrMethodDecorator (base p/ modos A/B/C)
 │   ├── di.ts                 # Module, Injectable, Inject, Optional, Global + marcadores de tipo
@@ -65,13 +71,14 @@ As 3 maiores comunidades (por nº de nós) são código de produção; as demais
 Relatório completo: [`.specs/graph/GRAPH_REPORT.md`](../graph/GRAPH_REPORT.md).
 
 ## God Nodes (mais conectados)
-1. `HttpStatus` — 74 arestas (usado por exceptions, decorators HTTP e OpenAPI)
-2. `HttpException` — 42 arestas (base de todas as 43 subclasses)
+1. `HttpStatus` — 73 arestas (usado por exceptions, decorators HTTP e OpenAPI)
+2. `HttpException` — 41 arestas (base de todas as 43 subclasses)
 3. `methodDecorator()` / `classOrMethodDecorator()` — núcleo do padrão dual (modos A/B/C)
-4. `compilerOptions` — repetido pelos 5 tsconfigs de fixture `mode-c-*` (esperado, não é acoplamento real)
+4. `vitest` — 27 arestas (dependência de teste mais compartilhada do projeto)
+5. `compilerOptions` — repetido pelos tsconfigs de fixture `mode-c-*` (esperado, não é acoplamento real)
 
 ## Observações
 - Nenhum ciclo de import detectado.
-- 355 nós isolados (≤1 conexão) — majoritariamente DTOs/fixtures de teste usados só localmente (`CreateUserBody`, `ListUsersQuery`, etc.), não sinaliza problema.
+- Módulos novos desde a última atualização (F03 `validation-engine` completa, F04 `class-factory` T-001): `src/validation/{v,extensions,meta,openapi}.ts`, `src/class/class-factory.ts`.
 - O grafo foi construído com `--code-only` (sem `GEMINI_API_KEY`/`ANTHROPIC_API_KEY`/etc.) — não conecta `REQ-NNN` das specs aos módulos que os implementam. Ver `## Degraded Mode` em STATE.md.
 - `graphify update . --no-viz --code-only` deve ser rodado manualmente após cada commit (o hook de pós-commit automático não pôde ser instalado nesta sessão — bloqueado pelo classificador de auto mode; ver STATE.md).

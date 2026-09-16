@@ -11,10 +11,11 @@ dist
 # Testing
 .coverage
 
-# graph-spec-design cache and machine-local metadata
+# graph-spec-design cache, machine-local metadata and dated re-cluster backups
 .specs/graph/cache/
 .specs/graph/.graphify_python
 .specs/graph/.graphify_root
+.specs/graph/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
 
 # QA agent temporaries
 .qa/
