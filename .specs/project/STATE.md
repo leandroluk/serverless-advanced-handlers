@@ -1,6 +1,6 @@
 # State
 
-Last synced commit: fdf26fb
+Last synced commit: 70b8f55
 **Last Updated:** 2026-09-16
 
 ## Current Work
@@ -109,6 +109,6 @@ Nenhuma feature em execução agora — F05 `di-aot` foi a última fechada. Pró
 - Helper de cliente `uploadForm()` para o fluxo S3.
 
 ## Degraded Mode
-- Grafo construído em 2026-09-15 com `graphify . --code-only` (930 nós, 1890 arestas, 43 comunidades) — sem chave de LLM (`ANTHROPIC_API_KEY`/`GEMINI_API_KEY`/etc.), então **não indexa `.specs/*.md`**: `graphify query "o que implementa REQ-001?"` não funciona; usar leitura direta das specs para perguntas de requisito.
+- Grafo atualizado em 2026-09-16 com `graphify update . --no-viz --code-only` + `graphify cluster-only .` (1829 nós, 3204 arestas, 148 comunidades) — sem chave de LLM (`ANTHROPIC_API_KEY`/`GEMINI_API_KEY`/etc.), então **não indexa `.specs/*.md`**: `graphify query "o que implementa REQ-001?"` não funciona; usar leitura direta das specs para perguntas de requisito.
 - Hook de pós-commit não instalado (bloqueado pelo auto mode); atualizar manualmente com `graphify update . --no-viz --code-only` após commits que mudem `src/`.
 - Relatório: [`.specs/graph/GRAPH_REPORT.md`](../graph/GRAPH_REPORT.md). Docs de codebase `STRUCTURE.md`/`INTEGRATIONS.md` criados a partir dele.

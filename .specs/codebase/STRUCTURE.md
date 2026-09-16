@@ -1,6 +1,6 @@
 # Structure
 
-Gerado a partir do código real (`src/`) e do grafo (`.specs/graph/graph.json`, 1033 nós/2058 arestas/49 comunidades — build `--code-only`, sem indexação semântica de `.specs/*.md` por falta de chave de LLM; a rotulagem de comunidades também depende de LLM, então nomes novos desde a última rotulagem aparecem como o nó-hub cru, ex. `extensions.ts`).
+Gerado a partir do código real (`src/`) e do grafo (`.specs/graph/graph.json`, 1829 nós/3204 arestas/148 comunidades — build `--code-only`, sem indexação semântica de `.specs/*.md` por falta de chave de LLM; a rotulagem de comunidades também depende de LLM, então nomes novos desde a última rotulagem aparecem como o nó-hub cru, ex. `extensions.ts`).
 
 ## Entradas do pacote (`package.json` exports)
 
@@ -33,6 +33,11 @@ src/
 ├── di/
 │   ├── tokens.ts             # Type, InjectionToken<T> (nominal), Token, TokenValue
 │   └── providers.ts           # Provider, ClassProvider, ValueProvider, FactoryProvider, ExistingProvider, Scope, ModuleMetadata, DynamicModule, OnModuleInit/Destroy
+├── compiler/
+│   ├── errors.ts              # CompilerError (catálogo SAH1xx) — mensagem com arquivo/linha reais do nó ts-morph
+│   ├── decorator-mode.ts        # detectDecoratorMode(project) → 'A'|'B'|'C' via compilerOptions efetivo
+│   ├── ast-analyzer.ts           # readDecoratorArgument, readAnalyzableArray (SAH100), resolveIdentifierToClass, resolveTypeToClass
+│   └── di-resolver.ts             # resolveAppGraph(project, rootModule) — algoritmo completo de DI-AOT (F05, ver design.md)
 ├── http/
 │   ├── status.ts             # HttpStatus (paridade NestJS, 56 membros + 511) e reason phrases
 │   ├── exceptions.ts          # HttpException + 43 subclasses (8 NestJS-parity da T-008 + 35 da ampliação 4xx/5xx)
@@ -79,6 +84,6 @@ Relatório completo: [`.specs/graph/GRAPH_REPORT.md`](../graph/GRAPH_REPORT.md).
 
 ## Observações
 - Nenhum ciclo de import detectado.
-- Módulos novos desde a última atualização (F03 `validation-engine` completa, F04 `class-factory` T-001): `src/validation/{v,extensions,meta,openapi}.ts`, `src/class/class-factory.ts`.
+- Módulos novos desde a última atualização (F05 `di-aot` completa): `src/compiler/{errors,decorator-mode,ast-analyzer,di-resolver}.ts`. Nenhum é exportado por `src/index.ts`/`src/runtime/index.ts` (REQ-002) — só `/plugin` vai consumir, em F10.
 - O grafo foi construído com `--code-only` (sem `GEMINI_API_KEY`/`ANTHROPIC_API_KEY`/etc.) — não conecta `REQ-NNN` das specs aos módulos que os implementam. Ver `## Degraded Mode` em STATE.md.
 - `graphify update . --no-viz --code-only` deve ser rodado manualmente após cada commit (o hook de pós-commit automático não pôde ser instalado nesta sessão — bloqueado pelo classificador de auto mode; ver STATE.md).
