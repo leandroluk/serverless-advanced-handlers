@@ -75,6 +75,7 @@
 - [2026-09-14] Q3: corpo de erro default compatível com NestJS; RFC 9457 via `errors.format: problem-json`.
 - [2026-09-14] Q4: guards/interceptors/filters usam `ExecutionContext` com paridade NestJS + `Reflector` alimentado por metadados gerados no build.
 - [2026-09-14] Ferramental: Vitest, oxlint + oxfmt, Conventional Commits (commitlint), lefthook e pnpm, espelhando o monorepo Metha (hooks sem turbo por ser pacote único).
+- [2026-09-14] Testes: `overrideProvider({ provide, useValue | useClass | useFactory, inject? })` no formato de provider do `@Module`, variádico, com estratégias mutuamente excludentes (tipagem e runtime); mesmo formato em `overrideGuard/Interceptor/Filter`.
 
 ---
 

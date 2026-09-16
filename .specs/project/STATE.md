@@ -1,7 +1,7 @@
 # State
 
-Last synced commit: 6f6dcc2
-**Last Updated:** 2026-09-15
+Last synced commit: fdf26fb
+**Last Updated:** 2026-09-16
 
 ## Current Work
 **F00 `project-setup`, F01a `public-api-core` (8/8) e F01b `public-api-surface` (5/5) concluídas** — cada task integrada no master com commit próprio, fluxo PO/DEV/QA em agentes separados (`.claude/agents/`: `po` Haiku 4.5, `dev` Opus 5 high, `qa` Sonnet 5 medium), documentado em CONVENTIONS.md.
@@ -12,7 +12,9 @@ Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43
 
 **F02 `poc-risks` concluída (5/5).** Nenhum risco refutado; a maioria ganhou requisitos concretos de implementação para F06/F10 — ver `.specs/codebase/CONCERNS.md` e `.specs/features/poc-risks/findings/`. Único item em aberto: deploy real em AWS pra REQ-207 virar `PASS` (proxy local já é indicativo forte), sob autorização explícita futura.
 
-**F03 `validation-engine` e F04 `class-factory` especificadas (Tasks).** Não precisaram de nova Specify/Design — REQ-010..026 e os contratos públicos (`Class`, `v`, `instance`) já existiam em `public-api/spec.md`/`design.md` desde a fase Complex original; só faltava o breakdown em tasks e a execução. F03: 3 tasks sequenciais (`v` core → meta/resolveMeta → toOpenapiSchema). F04: 2 tasks sequenciais (`Class()`+guard → `instance()`+integração com `v`). Nenhuma execução ainda.
+**F03 `validation-engine` (3/3) e F04 `class-factory` (2/2) concluídas.** Não precisaram de nova Specify/Design — REQ-010..026 e os contratos públicos (`Class`, `v`, `instance`) já existiam em `public-api/spec.md`/`design.md` desde a fase Complex original. No caminho, um bug real de bundling do `tsdown` foi achado e corrigido (design.md decisão 17).
+
+**F05 `di-aot` em andamento.** Escopo maior: primeiro código de compilador (usa `ts-morph`), REQ-004..008/030..037 já existem, mas a arquitetura interna (`compiler/decorator-mode.ts`, `ast-analyzer.ts`, `di-resolver.ts`) não tinha Design ainda. Risco "ts-morph × TypeScript 7" (CONCERNS.md) validado por protótipo antes de desenhar: resolução de parâmetro através de barrel, leitura do array `providers` do `@Module`, detecção de ciclo, ordenação topológica, e os dois casos do "subconjunto analisável" (interface sem `@Inject`, `SpreadElement` em array) — todos confirmados funcionando. Seguindo pra Design.
 
 ## Todos
 - [x] F00 `project-setup` — Execute phase
@@ -54,6 +56,7 @@ Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43
 - none
 
 ## Recent Decisions (Last 15)
+- [2026-09-16] F05 `di-aot`: risco "ts-morph × TypeScript 7" (CONCERNS.md) validado por protótipo antes do Design — `ts-morph` não tem `peerDependency` em `typescript`, carrega compilador embutido próprio, totalmente desacoplado da devDependency do pacote. Resolução de parâmetro através de barrel, leitura do `@Module`, detecção de ciclo (DFS), ordenação topológica e os dois casos do "subconjunto analisável" (interface sem `@Inject`, `SpreadElement`) confirmados funcionando. Decisão do usuário: prototipar risco antes de desenhar, em vez de ir direto pra Design ou pausar a feature.
 - [2026-09-15] Descoberto e corrigido bug real de bundling em `tsdown`/`rolldown-plugin-dts` (0.23.0/0.28.5): `export * as v from './v'` descarta silenciosamente um dos dois lados (reexport externo ou exports locais) quando `v.ts` combina os dois. Fix: `v` como `const` (interseção de tipos) + `namespace v` de mesmo nome (merge valor+namespace) só para `infer/input/output`; tipos auxiliares ficam fora do namespace (self-reference se entrarem). Documentado em `public-api/design.md` decisão 17 — padrão obrigatório para qualquer reexport futuro de SDK externo como namespace (candidato: F09 openapi).
 - [2026-09-15] F03 `validation-engine` e F04 `class-factory` vão direto pra Tasks (sem Specify/Design novos): REQ-010..026 e os `Public Contracts` já existiam em `public-api/design.md` desde a fase Complex original. F03 = 3 tasks sequenciais (`v` core, precisa adicionar `ms` como primeira `dependencies` real do pacote → meta/resolveMeta → toOpenapiSchema). F04 = 2 tasks sequenciais (`Class()`+guard → `instance()`, que integra com `v.ts`). Restrição: `src/class/types.ts` já é API pública travada pelo snapshot de public-api-surface T-005 — nenhuma task pode alterá-lo.
 - [2026-09-15] F02 `poc-risks` design + tasks concluídos: 5 tasks (T-201/204/205/206 em P1, T-207 em P2). Harness de cada experimento é descartável (scratchpad, nunca worktree git, nunca dependência nova em `package.json` da lib) — só o veredito escrito (`FINDINGS-<REQ>.md`) é commitado. Sem QA dedicado (não há código pra verificar); orquestrador substitui o PO revisando a evidência.
@@ -73,7 +76,6 @@ Grafo do código construído (`graphify . --code-only`, 930 nós/1890 arestas/43
 - [2026-09-14] Plugin compatível com osls 4: schema via `configSchemaHandler`, sem `provider.request()`/SDK v2/`variableResolvers`/`package.include`, opções de CLI tipadas.
 - [2026-09-14] Alvo de deploy: osls 3.x/4.x (fork open-source do Serverless v3); Serverless Framework v4 upstream fora do escopo (exige login). `build.esbuild: false` removido.
 - [2026-09-14] Modos de decorators A/B/C detectados pelo tsconfig; **B (legado + emitDecoratorMetadata) é o padrão**; SWC + `reflect-metadata` só onde necessário; marcadores de tipo para parâmetros (obrigatórios no C).
-- [2026-09-14] Testes: `overrideProvider({ provide, useValue | useClass | useFactory, inject? })` no formato de provider do `@Module`, variádico, com estratégias mutuamente excludentes (tipagem e runtime); mesmo formato em `overrideGuard/Interceptor/Filter`.
 ## Recent Progress (Last 10)
 - [2026-09-16] class-factory T-002 complete. Gate: 47/47 + 12/12 + `pnpm check`/`lint:ci`/`test` (681/681)/`build`. QA PASS (consumidor isolado via `pnpm link:` fora do monorepo), PO ACCEPTED. SPEC_DEVIATION: `instance` entra no objeto `extensions` de `v.ts` (não um `export {instance} from` solto, que não funcionaria com `v` sendo `const`). **F04 `class-factory` concluída (2/2).** Commit: `feat(class)` instance (este commit). [REQ-026]
 - [2026-09-15] class-factory T-001 complete. Gate: 31/31 + 7/7 + `pnpm check`/`test` (660/660)/`build`. QA PASS (consumidor externo real, teste adversarial de ordem entre subclasses), PO ACCEPTED. SPEC_DEVIATION: `encode()` só funciona partindo do output (limitação real do `z.encode`, documentada, não corrigida — tipo travado não permite mudança). Commit: `feat(class)` factory (este commit). [REQ-020..025]
