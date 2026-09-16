@@ -30,6 +30,40 @@
 import * as z from 'zod';
 import {boolish, datetime, delimited, duration, file, parseBytes, timestamp} from '#/validation/extensions';
 
+/**
+ * Metadados tipados de `.meta()` (REQ-016).
+ *
+ * `GlobalMeta` é a interface que o Zod usa como tipo do `globalRegistry`; augmentá-la aqui dá tipo e
+ * autocomplete às duas chaves do framework em qualquer `.meta()` do projeto **e** de quem consome o pacote
+ * (basta o módulo entrar no programa — `import {v} from 'serverless-advanced-handlers'` já basta):
+ *
+ * - `name` — nome do campo no transporte (`first_name` na URL ⇄ `firstName` no TS), mesmo conceito do
+ *   `name` de parâmetro OpenAPI. Aplicado em runtime por `decodeTransport`/`encodeTransport` (F07) e na
+ *   geração do OpenAPI (T-003);
+ * - `examples` — exemplos tipados pelo **input** do schema: `$input` é o marcador do Zod que
+ *   `$replace<GlobalMeta, this>` troca pelo `input<T>` do schema em que `.meta()` foi chamado, então
+ *   `v.number().meta({examples: ['x']})` é erro de tipo e `v.number().meta({examples: [42]})` passa.
+ *   Prefira exemplos determinísticos: `new Date().toISOString()` gera um `openapi.json` diferente a cada
+ *   build.
+ *
+ * As chaves nativas do Zod (`id`, `title`, `description`, `deprecated`) continuam valendo. `id` é
+ * **reservado**: o Zod o usa para extrair o schema para `$defs`/`$ref` e o compilador o preenche com o nome
+ * da classe para montar `components.schemas` — não use `id` em campos.
+ *
+ * **Limite da augmentation:** ela só *adiciona* membros. O Zod declara `[k: string]: unknown` em
+ * `JSONSchemaMeta` (herdada por `GlobalMeta`), e não há como remover um index signature por augmentation —
+ * ou seja, `.meta({nmae: 'x'})` **não** é erro de tipo. O rigor contra chaves desconhecidas é de
+ * `validateMeta` (`#/validation/meta`), em tempo de build.
+ */
+declare module 'zod' {
+  interface GlobalMeta {
+    /** Nome do campo no transporte (query, header, body, ...), quando diferente do nome em TypeScript. */
+    name?: string;
+    /** Exemplos do valor **de entrada** do schema, usados na documentação OpenAPI. */
+    examples?: z.$input[];
+  }
+}
+
 const extensions = {boolish, datetime, delimited, duration, file, parseBytes, timestamp};
 
 type V = typeof z & typeof extensions;

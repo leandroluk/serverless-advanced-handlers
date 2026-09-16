@@ -1,8 +1,9 @@
-// Tipagem do motor `v` (REQ-010..REQ-015): reexport do Zod, precedência das extensões e v.infer/input/output.
+// Tipagem do motor `v` (REQ-010..REQ-016): reexport do Zod, extensões, v.infer/input/output e `.meta()`.
 import {describe, expectTypeOf, it} from 'vitest';
 import * as z from 'zod';
 
 import type * as root from '#/index';
+import {resolveMeta, validateMeta} from '#/validation/meta';
 import {v} from '#/validation/v';
 import type {
   BoolishOptions,
@@ -141,6 +142,78 @@ describe('v.file / ByteSize / v.parseBytes (REQ-015)', () => {
     v.file({maxSize: '2TB'});
     // @ts-expect-error chave desconhecida
     v.file({size: '2MB'});
+  });
+});
+
+describe('.meta() augmentation (REQ-016)', () => {
+  it('types the two keys added by the framework', () => {
+    expectTypeOf(v.string().meta({name: 'first_name', examples: ['John']})).toEqualTypeOf<z.ZodString>();
+    expectTypeOf(v.string().meta()).toExtend<{name?: string; examples?: string[]} | undefined>();
+
+    // @ts-expect-error name é uma string
+    v.string().meta({name: 1});
+  });
+
+  it('keeps the native Zod keys typed', () => {
+    const schema = v.string().meta({id: 'FirstName', title: 'Nome', description: 'Primeiro nome', deprecated: true});
+
+    expectTypeOf(schema).toEqualTypeOf<z.ZodString>();
+
+    // @ts-expect-error description é uma string
+    v.string().meta({description: 1});
+  });
+
+  it('types examples by the $input of the schema (AC-7)', () => {
+    expectTypeOf(v.number().meta({examples: [42]})).toEqualTypeOf<z.ZodNumber>();
+    expectTypeOf(v.number().meta()).toExtend<{examples?: number[]} | undefined>();
+
+    // @ts-expect-error examples de um v.number() é number[]
+    v.number().meta({examples: ['x']});
+  });
+
+  it('types examples by the input side of a codec, not the output', () => {
+    // `v.boolish()` decodifica `string | boolean` -> `boolean`; os exemplos documentam o transporte.
+    expectTypeOf(v.boolish().meta({examples: ['1', true]})).toEqualTypeOf<ZodBoolish>();
+    expectTypeOf(v.datetime().meta({examples: ['2024-01-01T00:00:00.000Z', new Date(0)]})).toEqualTypeOf<ZodDatetime>();
+
+    // @ts-expect-error o input de v.datetime() é string | Date, não number
+    v.datetime().meta({examples: [0]});
+  });
+
+  it('cannot reject unknown keys by type alone — o index signature do Zod deixa passar', () => {
+    const meta = v.string().meta({nmae: 'first_name'});
+
+    expectTypeOf(meta).toEqualTypeOf<z.ZodString>();
+  });
+});
+
+describe('resolveMeta / validateMeta (REQ-017, REQ-018)', () => {
+  it('types the resolved metadata by the schema it came from', () => {
+    expectTypeOf(resolveMeta(v.number()).examples).toEqualTypeOf<number[] | undefined>();
+    expectTypeOf(resolveMeta(v.number()).name).toEqualTypeOf<string | undefined>();
+    expectTypeOf(resolveMeta(v.string()).deprecated).toEqualTypeOf<boolean | undefined>();
+  });
+
+  it('accepts any Zod schema, wrapped or not', () => {
+    expectTypeOf(resolveMeta(v.string().optional())).toBeObject();
+    expectTypeOf(resolveMeta(z.object({id: z.string()}))).toBeObject();
+
+    // @ts-expect-error resolveMeta recebe um schema, não um valor
+    resolveMeta('string');
+  });
+
+  it('takes an optional root path and returns void', () => {
+    expectTypeOf(validateMeta).returns.toEqualTypeOf<void>();
+    validateMeta(v.string());
+    validateMeta(v.string(), 'UserEntity');
+
+    // @ts-expect-error o caminho é uma string
+    validateMeta(v.string(), 1);
+  });
+
+  it('is reachable from the package root (AC-8)', () => {
+    expectTypeOf<typeof root.resolveMeta>().toEqualTypeOf<typeof resolveMeta>();
+    expectTypeOf<typeof root.validateMeta>().toEqualTypeOf<typeof validateMeta>();
   });
 });
 

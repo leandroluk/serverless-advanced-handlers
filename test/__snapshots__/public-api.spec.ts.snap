@@ -555,11 +555,15 @@ export declare function methodDecorator(): DualMethodDecorator;
 
 export declare function parameterDecorator(): ParameterDecorator;
 
+export declare function resolveMeta<T extends AnySchema>(schema: T): z.core.$replace<z.core.GlobalMeta, T>;
+
 declare const v: V;
 
 declare namespace v {
     type infer<T extends z.ZodType> = z.infer<T>;
     type input<T extends z.ZodType> = z.input<T>;
     type output<T extends z.ZodType> = z.output<T>;
-}"
+}
+
+export declare function validateMeta(schema: AnySchema, path?: string): void;"
 `;

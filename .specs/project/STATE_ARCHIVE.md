@@ -90,5 +90,6 @@
 - [2026-09-14] public-api-core T-008 complete. Gate: 69/69 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. Commit: `feat(http)` exceptions. [REQ-049, REQ-051]
 - [2026-09-15] public-api-core T-001 complete. Gate: 7/7 pass + `pnpm check`/`lint:ci`/`test`. QA PASS (D-1 corrigido), PO ACCEPTED. SPEC_DEVIATION: `deps.neverBundle` no `tsdown.config.ts` (evita falso negativo do teste de fronteira). Commit: `test(boundaries)`. [REQ-001, REQ-002]
 - [2026-09-15] public-api-core T-007 complete. Gate: 18/18 pass + `pnpm check`. QA PASS (sem defeitos), PO ACCEPTED. SPEC_DEVIATION: none. **F01a `public-api-core` concluída (8/8).** Commit: `feat(decorators)` HTTP. [REQ-007, REQ-040..043, REQ-045, REQ-050]
+- [2026-09-15] Quick task (usuário) — exceções HTTP 4xx/5xx restantes complete. Gate: 258/258 + `pnpm test` 373/373. QA PASS, PO ACCEPTED. REQ-051 ampliada (35 subclasses). Integração feita com `git stash --keep-index` para separar do commit da T-007. Commit: `feat(http)` exceptions. [REQ-051]
 
 ---

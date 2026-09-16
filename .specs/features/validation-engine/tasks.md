@@ -51,6 +51,8 @@
   - `validateMeta` aceita as chaves reservadas e rejeita uma chave desconhecida, com o caminho do campo na mensagem de erro.
   - `examples` é tipado pelo `$input` do schema no editor (teste de tipo: `v.number().meta({examples: ['x']})` é erro).
 - **Gate**: `pnpm vitest run test/validation-meta.spec.ts && pnpm vitest run --typecheck test/types/validation.test-d.ts`
+- **[x] Concluída.** Gate: 25/25 + 27/27. QA PASS (reproduziu a verificação da declaração publicada com consumidor externo real, testou `z.lazy()` recursivo pra confirmar corte de ciclo, cobriu formatos de caminho não testados pelo DEV — pipe `.in`/`.out`, `record.keyType`, `set.valueType`), PO ACCEPTED.
+- **Notas de execução:** `validateMeta` lança `Error` simples (não retorna, sem classe de erro nova) com a mensagem `[serverless-advanced-handlers] Unknown meta key "X" at <path>`. `nonoptional` incluído como 7º wrapper além dos 6 da spec (extensão sensata, aceita pelo PO). Corte de ciclo via `Set` de instâncias visitadas garante término em schemas recursivos (`z.lazy()`). Suíte completa: 587/587.
 
 ## T-003: `toOpenapiSchema`
 - **REQ**: REQ-019
